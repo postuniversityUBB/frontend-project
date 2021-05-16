@@ -1,0 +1,67 @@
+$lightGrey: #ebf0f9;
+$lightBlue: #c5d0e2;
+$blue: #384a9c;
+$white: #ffffff;
+$black: #000000;
+$red: red;
+
+/* Application body */
+body {
+	background-color: $lightGrey;
+}
+
+/* Navigation bar */
+.navigationLink {
+	text-align: center;
+	letter-spacing: 0.4px;
+	font-family: OpenSans-Regular;
+	font-size: 20px;
+	color: $lightGrey;
+	opacity: 1;
+	padding: 20px 0px 20px 0px;
+	display: block;
+}
+
+.navigationLink:link {
+	text-decoration: none;
+}
+
+.navigationLink:hover {
+	text-decoration: underline;
+	font-family: OpenSans-Bold;
+	font-size: 22px;
+}
+
+.clearIcon {
+	color: $lightGrey;
+	top: 31px;
+	left: 218px;
+	width: 40px;
+	height: 40px;
+}
+
+.companyLogo {
+	width: 240px;
+	height: 50px;
+	border-radius: 10px;
+}
+
+.toolBar {
+	background-color: $lightGrey;
+	box-shadow: 1px 1px 1px 8px rgba(235, 240, 249, 1);
+	padding-top: 5px;
+}
+
+/* List of Users and Projects page */
+.listEntities {
+	margin: 100px 30px 60px 30px;
+	padding: 10px 40px 60px 40px;
+	border-radius: 7px;
+	background-color: $white;
+}
+
+.listEntities .header {
+	color: $blue;
+	font-size: 26px;
+	padding-left: 8px;
+}
