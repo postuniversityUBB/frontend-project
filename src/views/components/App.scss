@@ -52,7 +52,7 @@ body {
 	padding-top: 5px;
 }
 
-/* List of Users and Projects page */
+/* List of Projects and Users pages */
 .listEntities {
 	margin: 100px 30px 60px 30px;
 	padding: 10px 40px 60px 40px;
@@ -64,4 +64,25 @@ body {
 	color: $blue;
 	font-size: 26px;
 	padding-left: 8px;
+}
+
+.newEntity {
+	margin-bottom: 20px;
+}
+
+.newEntity .inactive-button {
+	background-color: $blue;
+	color: $white;
+	width: 40px;
+	height: 40px;
+}
+
+.newEntity .inactive-button:hover {
+	background-color: $blue;
+	color: $white;
+}
+
+.loadingIcons {
+	margin-top: 300px;
+	color: $blue;
 }
