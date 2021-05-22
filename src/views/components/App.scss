@@ -1,9 +1,4 @@
-$lightGrey: #ebf0f9;
-$lightBlue: #c5d0e2;
-$blue: #384a9c;
-$white: #ffffff;
-$black: #000000;
-$red: red;
+@import '../../styles/scss/global.scss';
 
 /* Application body */
 body {
@@ -61,7 +56,7 @@ body {
 }
 
 .listEntities .header {
-	color: $blue;
+	color: $dark-blue;
 	font-size: 26px;
 	padding-left: 8px;
 }
@@ -71,18 +66,18 @@ body {
 }
 
 .newEntity .inactive-button {
-	background-color: $blue;
+	background-color: $dark-blue;
 	color: $white;
 	width: 40px;
 	height: 40px;
 }
 
 .newEntity .inactive-button:hover {
-	background-color: $blue;
+	background-color: $dark-blue;
 	color: $white;
 }
 
 .loadingIcons {
 	margin-top: 300px;
-	color: $blue;
+	color: $dark-blue;
 }

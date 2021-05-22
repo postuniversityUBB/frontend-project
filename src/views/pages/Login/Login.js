@@ -27,13 +27,13 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(3),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
   avatar: {
-    marginTop: theme.spacing(12),
+    marginTop: theme.spacing(3),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
@@ -49,6 +49,7 @@ export default function Login() {
   const classes = useStyles();
 
   return (
+  <div className="listEntities">
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -107,9 +108,11 @@ export default function Login() {
           </Grid>
         </form>
       </div>
-      <Box mt={38}>
+      <Box mt={24}>
         <Copyright />
       </Box>
     </Container>
+  </div>
+    
   );
 }

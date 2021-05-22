@@ -54,8 +54,6 @@ function ListProjects() {
         const fetchData = async () => {
             axios.get(baseUrl + root + "/projects")
             .then(response => {
-                console.log(response);
-
                 setData(response.data);
 
                 setIsLoading(true);
