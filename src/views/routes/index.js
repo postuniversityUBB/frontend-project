@@ -1,7 +1,7 @@
 import Index from '../pages/Home/Index';
 import ListProjects from '../pages/Project/ListProjects';
 import ListUsers from '../pages/User/ListUsers';
-import Dashboard from '../pages/Statistics/Charts';
+import Charts from '../pages/Statistics/Charts';
 import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
 
@@ -21,7 +21,7 @@ const baseRoutes = [
     exactRoutes("/home/index", Index),
     exactRoutes("/project/list", ListProjects),
     exactRoutes("/user/list", ListUsers),
-    exactRoutes("/statistics/chart", Dashboard),
+    exactRoutes("/statistics/chart", Charts),
     exactRoutes("/login", Login),
     exactRoutes("/register", Register),
 ];

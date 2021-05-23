@@ -46,7 +46,7 @@ function ListProjects() {
 
     const table = tableStyles();
 
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const [data, setData] = useState([]);
 
@@ -54,10 +54,9 @@ function ListProjects() {
         const fetchData = async () => {
             axios.get(baseUrl + root + "/projects")
             .then(response => {
-                console.log(response.data);
                 setData(response.data);
 
-                setIsLoading(true);
+                setIsLoading(false);
             })
             .catch(error => {
                 console.log(error);
@@ -66,7 +65,7 @@ function ListProjects() {
         fetchData();
     }, []);
 
-    if (!isLoading) {
+    if (isLoading) {
         return (
             <div id="loadingSpinnerForListProjects">
                 <LoadingSpinner />
