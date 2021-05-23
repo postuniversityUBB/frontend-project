@@ -29,15 +29,15 @@ const useStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    height: '100vh',
+    height: '74vh',
     overflow: 'auto',
   },
   container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
   },
   paper: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     display: 'flex',
     overflow: 'auto',
     flexDirection: 'column',
@@ -52,32 +52,34 @@ export default function Charts() {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
-    <div className={classes.root}>
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                <Chart />
-              </Paper>
+    <div className="listEntities">
+      <div className={classes.root}>
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+          <Container maxWidth="lg" className={classes.container}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={8} lg={9}>
+                <Paper className={fixedHeightPaper}>
+                  <Chart />
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={4} lg={3}>
+                <Paper className={fixedHeightPaper}>
+                  <RecentIncome />
+                </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>
+                  <RecentProjects />
+                </Paper>
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <RecentIncome />
-              </Paper>
-            </Grid>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <RecentProjects />
-              </Paper>
-            </Grid>
-          </Grid>
-          <Box pt={28}>
-            <Copyright />
-          </Box>
-        </Container>
-      </main>
+            <Box pt={5}>
+              <Copyright />
+            </Box>
+          </Container>
+        </main>
+      </div>
     </div>
   );
 }

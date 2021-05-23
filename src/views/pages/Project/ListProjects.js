@@ -54,6 +54,7 @@ function ListProjects() {
         const fetchData = async () => {
             axios.get(baseUrl + root + "/projects")
             .then(response => {
+                console.log(response.data);
                 setData(response.data);
 
                 setIsLoading(true);
@@ -106,11 +107,11 @@ function ListProjects() {
                             customSort: (a,b) => a.title.localeCompare(b.title)
                         },
                         {
-                            title: 'Added By',
-                            field: 'addedByUserCode',
+                            title: 'Created By',
+                            field: 'createdBy',
                             render: rowData => (
                                 <div className={table.name}>
-                                    {rowData.addedByUserCode}
+                                    {rowData.createdBy}
                                 </div>
                             ),
                             searchable: true,
