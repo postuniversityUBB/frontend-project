@@ -56,7 +56,7 @@ body {
 }
 
 .listEntities .header {
-	color: $dark-blue;
+	color: $blue;
 	font-size: 26px;
 	padding-left: 8px;
 }
@@ -80,4 +80,37 @@ body {
 .loadingIcons {
 	margin-top: 300px;
 	color: $dark-blue;
+}
+
+/* Create Project and User pages */
+.createEntity {
+	margin: 100px 30px 0px 30px;
+	padding: 10px 40px 0px 40px;
+	border-radius: 7px;
+	background-color: $white;
+}
+
+.createEntity .header {
+	color: $blue;
+	font-size: 26px;
+	padding: 0px 0px 30px 8px;
+}
+
+.createEntity .inactive-button {
+	background-color: $lightBlue;
+	width: 350px;
+	border-radius: 7px;
+	margin: 0px 0px 10px 0px;
+}
+
+.createEntity .backToList {
+	background-color: $lightBlue;
+	width: 350px;
+	border-radius: 7px;
+	margin: 0px 0px 40px 0px;
+}
+
+.errorHandling {
+	color: $red;
+	font-size: 13px;
 }
