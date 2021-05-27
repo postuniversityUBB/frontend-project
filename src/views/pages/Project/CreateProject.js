@@ -283,7 +283,7 @@ function CreateProjectPage() {
                 <Grid container spacing={1}>
                     <Grid container item xs={12} justify="center">
                         <Button
-                            id="submitCreateClient"
+                            id="submitCreateProject"
                             className="inactive-button"
                             component={SubmitButton}
                             variant="contained"
@@ -377,7 +377,7 @@ function CreateProjectPage() {
                                 <DialogActions>
                                     <Grid container spacing={2}>
                                         <Grid container item xs={6} justify="center">
-                                            <Button id="alertDialogButtonCancelForCreateClient"
+                                            <Button id="alertDialogButtonCancelForCreatProject"
                                                     className={classes.dialogCancelButton}
                                                     onClick={handleCloseBackToList}
                                                     color="primary"
@@ -387,7 +387,7 @@ function CreateProjectPage() {
                                         </Grid>
                                         <Grid container item xs={6} justify="center">
                                             <Button
-                                                id="alertDialogButtonProceedForCreateClient"
+                                                id="alertDialogButtonProceedForCreateProject"
                                                 className={classes.dialogProceedButton}
                                                 href="./list"
                                                 color="primary"
