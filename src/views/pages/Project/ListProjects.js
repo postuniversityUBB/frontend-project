@@ -3,12 +3,9 @@ import MaterialTable from 'material-table';
 import { Divider, Grid, Fab, withStyles, makeStyles, Tooltip, Fade } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import axios from 'axios';
-import ArrowDownward from '@material-ui/icons/ArrowDownward';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
-import Search from '@material-ui/icons/Search';
+import { ArrowDownward, ChevronLeft, ChevronRight, FirstPage, LastPage, Search, ViewColumn } from '@material-ui/icons';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import { useHistory } from "react-router-dom";
 
 import LoadingSpinner from '../../components/layout/LoadingSpinner';
 
@@ -20,6 +17,7 @@ const tableIcons = {
     ResetSearch: forwardRef(() => ""),
     Search: forwardRef((props, ref) => <Search id="searchClients" {...props} ref={ref} />),
     SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
+    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
 const StyledDivider = withStyles(() => ({
@@ -50,6 +48,10 @@ function ListProjects() {
 
     const [data, setData] = useState([]);
 
+    const history = useHistory();
+    const routeChange = () => {
+        history.push("/task/list");
+    }
     useEffect(() => {
         const fetchData = async () => {
             axios.get(baseUrl + root + "/projects")
@@ -156,14 +158,18 @@ function ListProjects() {
                         }
                     ]}
                     data={data}
+                    actions={[
+                        {
+                          icon: () => <AssignmentIcon />,
+                          tooltip: 'View tasks',
+                          onClick: () => routeChange()
+                        }
+                      ]}
                     options={{
                         search: true,
                         sorting: true,
                         rowStyle: row => {
-                            if (!(row.tableData.id % 2)) {
-                                return {backgroundColor: '#EBF0F9', fontSize: 14}
-                            }
-                            return {fontSize: 14}
+                            return {backgroundColor: '#EBF0F9', fontSize: 14}
                         },
                         headerStyle: {
                             fontWeight: 'bold',
@@ -175,8 +181,8 @@ function ListProjects() {
                         showTitle: false,
                         initialPage: 0,
                         paging: true,
-                        pageSize: 5,
-                        pageSizeOptions: [5, 10, 25, { value: data.length, label: 'All' }],
+                        pageSize: 7,
+                        pageSizeOptions: [7, 10, 25, { value: data.length, label: 'All' }],
                         paginationType: "normal",
                         padding: "default"
                     }}

@@ -11,14 +11,14 @@ import { SnackbarProvider, useSnackbar } from 'notistack';
 const useStyles = makeStyles((theme) => ({
     formControl: {
         marginRight: theme.spacing(33),
-        marginBottom: theme.spacing(10),
+        marginBottom: theme.spacing(22),
         width: 300,
     },
     textField : {
-        width: 300,
+        width: 320,
     },
     keyboardDatePicker: {
-        width: 300,
+        width: 320,
     },
     dialogCreateProjectText: {
         color: "#384A9C",
@@ -126,9 +126,9 @@ function CreateProjectPage() {
     const [deadline, setDeadline] = useState(null);
     
     const [openBackToList, isOpenBackToList] = useState(false);
-    const [openCreateClient, isOpenCreateClient] = useState(false);
+    const [openCreateProject, isOpenCreateProject] = useState(false);
 
-    const handleClickOpenCreateClientSnackbar = (variant) => {
+    const handleClickOpenCreateProjectSnackbar = (variant) => {
       enqueueSnackbar('New project successfully created!', {variant});
     };
 
@@ -144,8 +144,8 @@ function CreateProjectPage() {
         isOpenBackToList(false);
     };
 
-    const handleCloseCreateClient = () => {
-        isOpenCreateClient(false);
+    const handleCloseCreateProject = () => {
+        isOpenCreateProject(false);
     };
 
     const handleChangeTitle = (event) => {
@@ -184,8 +184,8 @@ function CreateProjectPage() {
         .post(baseUrl + root + "/projects", payload)
         .then(values => {
             console.log(values);
-            isOpenCreateClient(true);
-            handleClickOpenCreateClientSnackbar('success');
+            isOpenCreateProject(true);
+            handleClickOpenCreateProjectSnackbar('success');
         })
         .catch(error => {
             console.log(error)
@@ -231,6 +231,8 @@ function CreateProjectPage() {
                     <TextField
                         id="description"
                         type="text"
+                        multiline
+                        rowsMax={3}
                         name="description"
                         value ={description}
                         {...register("description")}
@@ -291,33 +293,33 @@ function CreateProjectPage() {
                         >
                             Create Project
                         </Button>
-                        <Backdrop open={openCreateClient} onClose={handleCloseCreateClient} elevation={18}>
+                        <Backdrop open={openCreateProject} onClose={handleCloseCreateProject} elevation={18}>
                             <Dialog
-                                open={openCreateClient}
-                                TransitionComponent={TransitionCreateClient}
+                                open={openCreateProject}
+                                TransitionComponent={TransitionCreateProject}
                                 keepMounted
                                 aria-describedby="New project created!"
                                 disableBackdropClick
                             >
                                 <DialogContent>
-                                    <DialogContentText id="alertDialogDescriptionNewClient" className={classes.dialogCreateProjectText}>
+                                    <DialogContentText id="alertDialogDescriptionNewProject" className={classes.dialogCreateProjectText}>
                                         New project successfully created!
                                     </DialogContentText>
                                 </DialogContent>
                                 <DialogActions>
                                     <Grid container spacing={2}>
                                             <Grid container item xs={6} justify="center">
-                                                <Button id="alertDialogButtonNewClientForBacktoList"
+                                                <Button id="alertDialogButtonNewProjectForBacktoList"
                                                         className={classes.dialogCreateProjectNewProject}
                                                         onClick={() => {
                                                             reset({
-                                                                title: '',
-                                                                projectStatus: '',
-                                                                description: '',
-                                                                addedByUserCode: '',
+                                                                title: "",
+                                                                projectStatus: "",
+                                                                description: "",
+                                                                addedByUserCode: "",
                                                                 deadline: handleResetDatePickerDeadline(),
                                                             });
-                                                            handleCloseCreateClient();
+                                                            handleCloseCreateProject();
                                                         }}
                                                         color="primary"
                                                 >
@@ -341,14 +343,14 @@ function CreateProjectPage() {
 
                     <Grid container item xs={12} justify="center">
                         <Button
-                            id="alertDialogButtonForCreateClient"
+                            id="alertDialogButtonForCreateProject"
                             className="backToList"
                             variant="contained"
                             color="primary"
                             size="large"
                             onClick={ () => {
                                 (title !== "" || projectStatus !== "" || description !== "" ||
-                                 deadline !== null) ? handlePopUpBackToList() : handleClickOpenBackToList()}
+                                 addedByUserCode !== "" || deadline !== null) ? handlePopUpBackToList() : handleClickOpenBackToList()}
                             }
                         >
                             Back to list
@@ -415,7 +417,7 @@ function formatDate(dateString) {
     const newDate =  new Date(year, month-1, day);
 
     const moment = require('moment');
-    const newDateFormat = moment(newDate).format('YYYY-MM-DD'); // 'YYYY-MM-DD HH:mm:ss'
+    const newDateFormat = moment(newDate).format('YYYY-MM-DD');
     return newDateFormat;
 };
 
@@ -423,7 +425,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const TransitionCreateClient = React.forwardRef(function Transition(props, ref) {
+const TransitionCreateProject = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
