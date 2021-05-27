@@ -15,10 +15,10 @@ const useStyles = makeStyles((theme) => ({
         width: 300,
     },
     textField : {
-        width: 320,
+        width: 380,
     },
     keyboardDatePicker: {
-        width: 320,
+        width: 380,
     },
     dialogCreateProjectText: {
         color: "#384A9C",
