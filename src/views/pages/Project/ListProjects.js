@@ -45,8 +45,12 @@ function ListProjects() {
     const [data, setData] = useState([]);
 
     const history = useHistory();
-    const routeChange = () => {
-        history.push("/task/list");
+    const routeChange = (rowData) => {
+        history.push({
+            pathname: '/task/list',
+            search: `?project=${rowData.title}`,
+            state: { project: rowData.projectCode }
+        })
     }
 
     useEffect(() => {
@@ -157,9 +161,9 @@ function ListProjects() {
                         data={data}
                         actions={[
                             {
-                            icon: () => <AssignmentIcon />,
-                            tooltip: 'View tasks',
-                            onClick: () => routeChange()
+                                icon: () => <AssignmentIcon />,
+                                tooltip: 'View tasks',
+                                onClick: (event, rowData) => routeChange(rowData)
                             }
                         ]}
                         options={{
