@@ -5,8 +5,9 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, Slide} from '@
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import 'date-fns';
-import axios from 'axios';
 import { SnackbarProvider, useSnackbar } from 'notistack';
+
+import { postProjects } from "../../../api/api";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -39,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: 55,
         marginLeft: 25,
         marginBottom: 35,
+        letterSpacing: 0,
     },
     dialogCreateProjectBackToList: {
         height: 36,
@@ -110,9 +112,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CreateProjectPage() {
-    const baseUrl = 'https://ebs-software-v1.herokuapp.com';
-    const root = '/api';
-
     const domRef = useRef();
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
@@ -172,7 +171,15 @@ function CreateProjectPage() {
         setDeadline(null);
     };
 
-    const { register, handleSubmit, reset } = useForm();
+    const handleReset = () => {
+        setTitle('');
+        setProjectStatus('');
+        setDescription('');
+        setAddedByUserCode('');
+        setDeadline(handleResetDatePickerDeadline);
+    }
+
+    const { register, handleSubmit } = useForm();
     const onSubmit = (values, e) => {
         e.preventDefault();
         const payload = {
@@ -180,16 +187,13 @@ function CreateProjectPage() {
         };
         payload.deadline = formatDate(values.deadline);
 
-        axios
-        .post(baseUrl + root + "/projects", payload)
-        .then(values => {
-            console.log(values);
+        try {
+            postProjects(payload);
             isOpenCreateProject(true);
             handleClickOpenCreateProjectSnackbar('success');
-        })
-        .catch(error => {
-            console.log(error)
-        });
+        } catch (err) {
+            console.log(err);
+        }
     }
 
   return (
@@ -312,13 +316,7 @@ function CreateProjectPage() {
                                                 <Button id="alertDialogButtonNewProjectForBacktoList"
                                                         className={classes.dialogCreateProjectNewProject}
                                                         onClick={() => {
-                                                            reset({
-                                                                title: "",
-                                                                projectStatus: "",
-                                                                description: "",
-                                                                addedByUserCode: "",
-                                                                deadline: handleResetDatePickerDeadline(),
-                                                            });
+                                                            handleReset();
                                                             handleCloseCreateProject();
                                                         }}
                                                         color="primary"

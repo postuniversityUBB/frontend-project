@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react"
-import { useTheme } from "@material-ui/core/styles"
 import { Bar } from "react-chartjs-2"
 import Title from "./Title"
 import { getProjects } from "../../../api/api"
 import { Typography } from "@material-ui/core"
 import LoadingSpinner from "../layout/LoadingSpinner"
-
-function createData(time, amount) {
-	return { time, amount }
-}
 
 const groupBy = (array, key) => {
 	return array.reduce((result, currentValue) => {
@@ -19,23 +14,8 @@ const groupBy = (array, key) => {
 		return result
 	}, {})
 }
-const data = [
-	createData("01", 0),
-	createData("02", 1900),
-	createData("03", 600),
-	createData("04", 800),
-	createData("05", 1500),
-	createData("06", 2000),
-	createData("07", 2400),
-	createData("08", 2400),
-	createData("09", 2600),
-	createData("10", 2400),
-	createData("11", 2400),
-	createData("12", undefined),
-]
 
 export default function Chart() {
-	const theme = useTheme()
 	const [data, setData] = useState()
 	const [error, setError] = useState(false)
 	useEffect(() => {
@@ -71,7 +51,7 @@ export default function Chart() {
 					options={{
 						plugins: {
 							legend: {
-                display: false
+                	display: false
 							},
 						},
 					}}
