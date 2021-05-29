@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: 55,
         marginLeft: 25,
         marginBottom: 35,
+        letterSpacing: 0,
     },
     dialogCreateProjectBackToList: {
         height: 36,
