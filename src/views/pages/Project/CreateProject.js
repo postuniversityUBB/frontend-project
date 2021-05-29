@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: 25,
         marginBottom: 35,
         letterSpacing: 0,
+        minWidth: 180,
     },
     dialogCreateProjectBackToList: {
         height: 36,
@@ -51,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: 50,
         marginBottom: 35,
         marginRight: 25,
+        minWidth: 180,
         "&:hover": {
             height: 36,
             borderRadius: 9,
@@ -60,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
             paddingLeft: 50,
             marginBottom: 35,
             marginRight: 25,
+            minWidth: 180,
         }
     },
     dialogBackToListTitle: {
