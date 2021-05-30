@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useState} from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -11,6 +11,7 @@ import Link from '@material-ui/core/Link';
 import Chart from '../../components/statistics/Chart';
 import RecentIncome from '../../components/statistics/RecentIncome';
 import RecentProjects from '../../components/statistics/RecentProjects';
+import { Redirect } from 'react-router-dom';
 
 function Copyright() {
   return (
@@ -50,7 +51,11 @@ const useStyles = makeStyles((theme) => ({
 export default function Charts() {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const [user,setUser]= useState(JSON.parse(localStorage.getItem("user")))
 
+   if(!user){
+     return <Redirect to="/"/>
+   }
   return (
     <div className="listEntities">
       <div className={classes.root}>
