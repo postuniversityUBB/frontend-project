@@ -31,6 +31,34 @@ export const postProjects = async payload => {
 	}
 }
 
+export const deleteProject = async projectCode => {
+	try {
+		const { status } = await axios.delete(`${API_URL}/projects/${projectCode}`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		console.log("🚀 ~ file: api.js ~ line 36 ~ deleteProject")
+		return status;
+	} catch (err) {
+		throw err
+	}
+}
+
+export const getTasksForProject = async projectCode => {
+	try {
+		const { data } = await axios.get(`${API_URL}/projects/${projectCode}`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		console.log("🚀 ~ file: api.js ~ line 50 ~ getTasksForProject")
+		return data;
+	} catch (err) {
+		throw err
+	}
+}
+
 export const getUsers = async () => {
 	try {
 		const { data } = await axios.get(`${API_URL}/users`, {
@@ -38,7 +66,7 @@ export const getUsers = async () => {
 				Authorization: `Bearer ${token}`,
 			},
 		})
-		console.log("🚀 ~ file: api.js ~ line 27 ~ getUsers ~ response", data)
+		console.log("🚀 ~ file: api.js ~ line 64 ~ getUsers ~ response", data)
 		return data
 	} catch (err) {
 		throw err
@@ -48,7 +76,7 @@ export const getUsers = async () => {
 export const register = async payload => {
 	try {
 		const { status } = await axios.post(`${API_URL}/users/register`, payload)
-		console.log("🚀 ~ file: api.js ~ line 38 ~ register ~ response", status)
+		console.log("🚀 ~ file: api.js ~ line 78 ~ register ~ response", status)
 
 		return status
 	} catch (err) {
@@ -59,7 +87,7 @@ export const register = async payload => {
 export const login = async payload => {
 	try {
 		const { data, status } = await axios.post(`${API_URL}/users/login`, payload)
-		console.log("🚀 ~ file: api.js ~ line 38 ~ login ~ response", data, status)
+		console.log("🚀 ~ file: api.js ~ line 89 ~ login ~ response", data, status)
 
 		return { data, status }
 	} catch (err) {

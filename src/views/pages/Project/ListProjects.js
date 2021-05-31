@@ -20,9 +20,10 @@ import {
 	ViewColumn,
 } from "@material-ui/icons"
 import AssignmentIcon from "@material-ui/icons/Assignment"
+import DeleteIcon from '@material-ui/icons/Delete'
 import { Redirect, useHistory } from "react-router-dom"
 
-import { getProjects } from "../../../api/api"
+import { getProjects, deleteProject } from "../../../api/api"
 import LoadingSpinner from "../../components/layout/LoadingSpinner"
 
 const tableIcons = {
@@ -65,12 +66,25 @@ function ListProjects() {
 	const [data, setData] = useState([])
 	const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")))
 	const history = useHistory()
-	const routeChange = rowData => {
+
+	const handleRedirectTasks = rowData => {
 		history.push({
 			pathname: "/task/list",
 			search: `?project=${rowData.title}`,
-			state: { project: rowData.projectCode },
+			state: { projectCode: rowData.projectCode, projectTitle: rowData.title },
 		})
+	}
+
+	const handleDeleteProject = rowData => {
+		const fetchData = async () => {
+			try {
+				await deleteProject(rowData.projectCode)
+				console.log("🚀 ~ file: ListProjects.js ~ line 69 ~ data", data)
+			} catch (err) {
+				console.log(err)
+			}
+		}
+		fetchData()
 	}
 
 	useEffect(() => {
@@ -87,6 +101,7 @@ function ListProjects() {
 		}
 		fetchData()
 	}, [])
+
 	if (!user) {
 		return <Redirect to="/" />
 	}
@@ -187,8 +202,13 @@ function ListProjects() {
 							{
 								icon: () => <AssignmentIcon />,
 								tooltip: "View tasks",
-								onClick: (event, rowData) => routeChange(rowData),
+								onClick: (event, rowData) => handleRedirectTasks(rowData),
 							},
+							{
+								icon: () => <DeleteIcon />,
+								tooltip: 'Delete Project',
+								onClick: (event, rowData) => handleDeleteProject(rowData)
+							  }
 						]}
 						options={{
 							search: true,

@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 		fontWeight: "bold",
 	},
 	userTitle: {
-		marginRight: "100px",
+		marginRight: "80px",
 	},
 }))
 
@@ -144,10 +144,10 @@ export default function Navbar() {
 									</Link>
 									<Typography
 										color="primary"
-										variant="h4"
+										variant="h5"
 										className={classes.userTitle}
 									>
-										Hi {user.firstName}
+										Hi, {user.firstName}!
 									</Typography>
 									<Button
 										size="large"
@@ -168,10 +168,10 @@ export default function Navbar() {
 									<Button
 										size="large"
 										color="primary"
-										href="#buttons"
+										href="/log-out"
 										className={classes.menuButtons}
 									>
-										<Link to="/log-out"> Log out</Link>
+										Logout
 									</Button>
 								</>
 							) : (
@@ -183,6 +183,14 @@ export default function Navbar() {
 										className={classes.menuButtons}
 									>
 										Contact
+									</Button>
+									<Button
+										size="large"
+										color="primary"
+										href="#buttons"
+										className={classes.menuButtons}
+									>
+										About
 									</Button>
 									<Button
 										size="large"
@@ -199,14 +207,6 @@ export default function Navbar() {
 										className={classes.menuButtons}
 									>
 										Register
-									</Button>
-									<Button
-										size="large"
-										color="primary"
-										href="#buttons"
-										className={classes.menuButtons}
-									>
-										About
 									</Button>
 								</>
 							)}
