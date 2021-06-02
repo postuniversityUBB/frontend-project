@@ -19,10 +19,11 @@ import {
 	Search,
 	ViewColumn,
 } from "@material-ui/icons"
-import AssignmentIcon from "@material-ui/icons/Assignment"
+import DeleteIcon from '@material-ui/icons/Delete'
 import { Redirect } from "react-router-dom"
 
 import { getTasksForProject } from "../../../api/api"
+import { deleteTask } from "../../../api/api"
 import LoadingSpinner from "../../components/layout/LoadingSpinner"
 
 const tableIcons = {
@@ -58,13 +59,24 @@ const tableStyles = makeStyles({
 	},
 })
 
+const handleDeleteTask = rowData => {
+	console.log("rowData", rowData)
+	const fetchData = async () => {
+		try {
+			await deleteTask(rowData.taskCode)
+			console.log("🚀 ~ file: ListTasks.js ~ line 65 ~ delete  task")
+			window.location.reload();
+		} catch (err) {
+			console.log(err)
+		}
+	}
+	fetchData()
+}
+
 function ListTasks(props) {
 	const table = tableStyles()
     const projectCode = props.location.state.projectCode;
     const projectTitle = props.location.state.projectTitle;
-
-    console.log("projectCode", projectCode);
-    console.log("projectTitle", projectTitle);
 
 	const [isLoading, setIsLoading] = useState(true)
 	const [data, setData] = useState([])
@@ -190,13 +202,13 @@ function ListTasks(props) {
 							},
 						]}
 						data={data}
-						// actions={[
-						// 	{
-						// 		icon: () => <AssignmentIcon />,
-						// 		tooltip: "View tasks",
-						// 		onClick: (event, rowData) => routeChange(rowData),
-						// 	},
-						// ]}
+						actions={[
+							{
+								icon: () => <DeleteIcon />,
+								tooltip: 'Delete Project',
+								onClick: (event, rowData) => handleDeleteTask(rowData)
+							}
+						]}
 						options={{
 							search: true,
 							sorting: true,

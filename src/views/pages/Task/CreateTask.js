@@ -7,7 +7,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import 'date-fns';
 import { SnackbarProvider, useSnackbar } from 'notistack';
 
-import { postProjects } from "../../../api/api";
+import { postTask } from "../../../api/api";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -114,7 +114,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function CreateProjectPage() {
+function CreateTaskPage() {
     const domRef = useRef();
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
@@ -122,15 +122,16 @@ function CreateProjectPage() {
     const SubmitButton = (props) => ( <button {...props} type="submit" />);
 
     const [title, setTitle] = useState('');
-    const [projectStatus, setProjectStatus] = useState('');
+    const [taskStatus, setTaskStatus] = useState('');
     const [description, setDescription] = useState('');
+    const [assignedToUserCode, setAssignedToUserCode] = useState('');
     const [deadline, setDeadline] = useState(null);
     
     const [openBackToList, isOpenBackToList] = useState(false);
     const [openCreateProject, isOpenCreateProject] = useState(false);
 
     const handleClickOpenCreateProjectSnackbar = (variant) => {
-      enqueueSnackbar('New project successfully created!', {variant});
+      enqueueSnackbar('New task successfully created!', {variant});
     };
 
     const handlePopUpBackToList = () => {
@@ -157,8 +158,12 @@ function CreateProjectPage() {
         setDescription(event.target.value);
     };
 
-    const handleChangeProjectStatus = (event) => {
-        setProjectStatus(event.target.value);
+    const handleChangeTaskStatus = (event) => {
+        setTaskStatus(event.target.value);
+    };
+
+    const handleChangeAssignedToUserCode = (event) => {
+        setAssignedToUserCode(event.target.value);
     };
     
     const handleDeadline = (date) => {
@@ -171,7 +176,7 @@ function CreateProjectPage() {
 
     const handleReset = () => {
         setTitle('');
-        setProjectStatus('');
+        setTaskStatus('');
         setDescription('');
         setDeadline(handleResetDatePickerDeadline);
     }
@@ -185,7 +190,7 @@ function CreateProjectPage() {
         payload.deadline = formatDate(values.deadline);
 
         try {
-            postProjects(payload);
+            postTask(payload);
             isOpenCreateProject(true);
             handleClickOpenCreateProjectSnackbar('success');
         } catch (err) {
@@ -195,7 +200,7 @@ function CreateProjectPage() {
 
   return (
     <div className="createEntity">
-        <h3 id="headerCreateProject" className="header">Create Project</h3>
+        <h3 id="headerCreateProject" className="header">Create Task</h3>
         <RootRef rootRef={domRef}>
             <form onSubmit={handleSubmit(onSubmit)} autocomplete="off" noValidate>
                 <FormControl id="titleForm" className={classes.formControl}>
@@ -215,15 +220,15 @@ function CreateProjectPage() {
 
                 <FormControl id="projectStatusForm" className={classes.formControl}>
                     <TextField
-                        id="projectStatus"
+                        id="taskStatus"
                         type="text"
-                        name="projectStatus"
-                        value ={projectStatus}
-                        {...register("projectStatus")}
-                        onChange={handleChangeProjectStatus}
+                        name="taskStatus"
+                        value ={taskStatus}
+                        {...register("taskStatus")}
+                        onChange={handleChangeTaskStatus}
                         className={classes.textField}
-                        label="Project Status"
-                        placeholder="Project Status"
+                        label="Task Status"
+                        placeholder="Task Status"
                         InputLabelProps={{shrink: true,}}
                     />
                 </FormControl>
@@ -241,6 +246,21 @@ function CreateProjectPage() {
                         className={classes.textField}
                         label="Description"
                         placeholder="Description"
+                        InputLabelProps={{shrink: true,}}
+                    />
+                </FormControl>
+
+                <FormControl id="addedByUserCodeForm" className={classes.formControl}>
+                    <TextField
+                        id="assignedToUserCode"
+                        type="text"
+                        name="assignedToUserCode"
+                        value ={assignedToUserCode}
+                        {...register("addedByUserCode")}
+                        onChange={handleChangeAssignedToUserCode}
+                        className={classes.textField}
+                        label="AssignedToUserCode"
+                        placeholder="AssignedToUserCode"
                         InputLabelProps={{shrink: true,}}
                     />
                 </FormControl>
@@ -277,7 +297,7 @@ function CreateProjectPage() {
                             size="large"
                             href="#"
                         >
-                            Create Project
+                            Create Task
                         </Button>
                         <Backdrop open={openCreateProject} onClose={handleCloseCreateProject} elevation={18}>
                             <Dialog
@@ -289,7 +309,7 @@ function CreateProjectPage() {
                             >
                                 <DialogContent>
                                     <DialogContentText id="alertDialogDescriptionNewProject" className={classes.dialogCreateProjectText}>
-                                        New project successfully created!
+                                        New task successfully created!
                                     </DialogContentText>
                                 </DialogContent>
                                 <DialogActions>
@@ -303,7 +323,7 @@ function CreateProjectPage() {
                                                         }}
                                                         color="primary"
                                                 >
-                                                    New project
+                                                    New task
                                                 </Button>
                                             </Grid>
                                             <Grid container item xs={6} justify="center">
@@ -329,7 +349,7 @@ function CreateProjectPage() {
                             color="primary"
                             size="large"
                             onClick={ () => {
-                                (title !== "" || projectStatus !== "" || description !== "" || 
+                                (title !== "" || taskStatus !== "" || description !== "" || 
                                 deadline !== null) ? handlePopUpBackToList() : handleClickOpenBackToList()}
                             }
                         >
@@ -409,10 +429,10 @@ const TransitionCreateProject = React.forwardRef(function Transition(props, ref)
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function CreateProject() {
+export default function CreateTask() {
     return (
         <SnackbarProvider maxSnack={1}>
-            <CreateProjectPage />
+            <CreateTaskPage />
         </SnackbarProvider>
     );
 };

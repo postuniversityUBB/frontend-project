@@ -59,6 +59,34 @@ export const getTasksForProject = async projectCode => {
 	}
 }
 
+export const postTask = async payload => {
+	try {
+		await axios.post(`${API_URL}/tasks`, payload, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		console.log("🚀 ~ file: api.js ~ line 64 ~ postTask")
+		return
+	} catch (err) {
+		throw err
+	}
+}
+
+export const deleteTask = async taskCode => {
+	try {
+		const { status } = await axios.delete(`${API_URL}/tasks/${taskCode}`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		console.log("🚀 ~ file: api.js ~ line 36 ~ deleteProject")
+		return status;
+	} catch (err) {
+		throw err
+	}
+}
+
 export const getUsers = async () => {
 	try {
 		const { data } = await axios.get(`${API_URL}/users`, {

@@ -2,6 +2,7 @@ import Index from '../pages/Home/Index';
 import ListProjects from '../pages/Project/ListProjects';
 import CreateProject from '../pages/Project/CreateProject';
 import ListTasks from '../pages/Task/ListTasks';
+import CreateTask from '../pages/Task/CreateTask';
 import ListUsers from '../pages/User/ListUsers';
 import Charts from '../pages/Statistics/Charts';
 import Login from '../pages/Login/Login';
@@ -25,6 +26,7 @@ const baseRoutes = [
     exactRoutes("/project/list", ListProjects),
     exactRoutes("/project/create", CreateProject),
     exactRoutes("/task/list", ListTasks),
+    exactRoutes("/task/create", CreateTask),
     exactRoutes("/user/list", ListUsers),
     exactRoutes("/statistics/chart", Charts),
     exactRoutes("/login", Login),

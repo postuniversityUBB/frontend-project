@@ -79,7 +79,8 @@ function ListProjects() {
 		const fetchData = async () => {
 			try {
 				await deleteProject(rowData.projectCode)
-				console.log("🚀 ~ file: ListProjects.js ~ line 69 ~ data", data)
+				console.log("🚀 ~ file: ListProjects.js ~ line 69 ~ data")
+				window.location.reload();
 			} catch (err) {
 				console.log(err)
 			}
@@ -208,7 +209,7 @@ function ListProjects() {
 								icon: () => <DeleteIcon />,
 								tooltip: 'Delete Project',
 								onClick: (event, rowData) => handleDeleteProject(rowData)
-							  }
+							}
 						]}
 						options={{
 							search: true,
