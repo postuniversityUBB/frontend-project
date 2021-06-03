@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     keyboardDatePicker: {
         width: 380,
     },
-    dialogCreateProjectText: {
+    dialogCreateTaskText: {
         color: "#384A9C",
         fontWeight: 700,
         fontSize: 20,
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
         marginRight: 70,
         marginLeft: 70,
     },
-    dialogCreateProjectNewProject: {
+    dialogCreateTaskNewTask: {
         height: 36,
         borderRadius: 9,
         borderStyle: "solid",
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
         letterSpacing: 0,
         minWidth: 180,
     },
-    dialogCreateProjectBackToList: {
+    dialogCreateTaskBackToList: {
         height: 36,
         borderRadius: 9,
         backgroundColor: "#384A9C",
@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function CreateTaskPage(props) {
+function CreateTaskPage() {
     const domRef = useRef();
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
@@ -123,8 +123,6 @@ function CreateTaskPage(props) {
     const location = useLocation();
     const projectCode = location.state.projectCode;
     const projectTitle = location.state.projectTitle;
-    console.log("projectCode", projectCode);
-    console.log("projectTitle", projectTitle);
 
     const SubmitButton = (props) => ( <button {...props} type="submit" />);
 
@@ -135,9 +133,9 @@ function CreateTaskPage(props) {
     const [deadline, setDeadline] = useState(null);
     
     const [openBackToList, isOpenBackToList] = useState(false);
-    const [openCreateProject, isOpenCreateProject] = useState(false);
+    const [openCreateTask, isOpenCreateTask] = useState(false);
 
-    const handleClickOpenCreateProjectSnackbar = (variant) => {
+    const handleClickOpenCreateTaskSnackbar = (variant) => {
       enqueueSnackbar('New task successfully created!', {variant});
     };
 
@@ -153,8 +151,8 @@ function CreateTaskPage(props) {
         isOpenBackToList(false);
     };
 
-    const handleCloseCreateProject = () => {
-        isOpenCreateProject(false);
+    const handleCloseCreateTask = () => {
+        isOpenCreateTask(false);
     };
 
     const handleChangeTitle = (event) => {
@@ -196,11 +194,11 @@ function CreateTaskPage(props) {
             ...values
         };
         payload.deadline = formatDate(values.deadline);
-        console.log("payload", payload);
+
         try {
             postTask(payload, projectCode);
-            isOpenCreateProject(true);
-            handleClickOpenCreateProjectSnackbar('success');
+            isOpenCreateTask(true);
+            handleClickOpenCreateTaskSnackbar('success');
         } catch (err) {
             console.log(err);
         }
@@ -208,7 +206,7 @@ function CreateTaskPage(props) {
 
   return (
     <div className="createEntity">
-        <h3 id="headerCreateProject" className="header">Create Task for {projectTitle}</h3>
+        <h3 id="headerCreateTask" className="header">Create Task for {projectTitle}</h3>
         <RootRef rootRef={domRef}>
             <form onSubmit={handleSubmit(onSubmit)} autocomplete="off" noValidate>
                 <FormControl id="titleForm" className={classes.formControl}>
@@ -226,7 +224,7 @@ function CreateTaskPage(props) {
                     />
                 </FormControl>
 
-                <FormControl id="projectStatusForm" className={classes.formControl}>
+                <FormControl id="taskStatusForm" className={classes.formControl}>
                     <TextField
                         id="taskStatus"
                         type="text"
@@ -264,7 +262,7 @@ function CreateTaskPage(props) {
                         type="text"
                         name="assignedToUserCode"
                         value ={assignedToUserCode}
-                        {...register("addedByUserCode")}
+                        {...register("assignedToUserCode")}
                         onChange={handleChangeAssignedToUserCode}
                         className={classes.textField}
                         label="AssignedToUserCode"
@@ -297,7 +295,7 @@ function CreateTaskPage(props) {
                 <Grid container spacing={1}>
                     <Grid container item xs={12} justify="center">
                         <Button
-                            id="submitCreateProject"
+                            id="submitCreateTask"
                             className="inactive-button"
                             component={SubmitButton}
                             variant="contained"
@@ -307,27 +305,27 @@ function CreateTaskPage(props) {
                         >
                             Create Task
                         </Button>
-                        <Backdrop open={openCreateProject} onClose={handleCloseCreateProject} elevation={18}>
+                        <Backdrop open={openCreateTask} onClose={handleCloseCreateTask} elevation={18}>
                             <Dialog
-                                open={openCreateProject}
-                                TransitionComponent={TransitionCreateProject}
+                                open={openCreateTask}
+                                TransitionComponent={TransitionCreateTask}
                                 keepMounted
-                                aria-describedby="New project created!"
+                                aria-describedby="New task created!"
                                 disableBackdropClick
                             >
                                 <DialogContent>
-                                    <DialogContentText id="alertDialogDescriptionNewProject" className={classes.dialogCreateProjectText}>
+                                    <DialogContentText id="alertDialogDescriptionNewTask" className={classes.dialogCreateTaskText}>
                                         New task successfully created!
                                     </DialogContentText>
                                 </DialogContent>
                                 <DialogActions>
                                     <Grid container spacing={2}>
                                             <Grid container item xs={6} justify="center">
-                                                <Button id="alertDialogButtonNewProjectForBacktoList"
-                                                        className={classes.dialogCreateProjectNewProject}
+                                                <Button id="alertDialogButtonNewTaskForBacktoList"
+                                                        className={classes.dialogCreateTaskNewTask}
                                                         onClick={() => {
                                                             handleReset();
-                                                            handleCloseCreateProject();
+                                                            handleCloseCreateTask();
                                                         }}
                                                         color="primary"
                                                 >
@@ -336,7 +334,7 @@ function CreateTaskPage(props) {
                                             </Grid>
                                             <Grid container item xs={6} justify="center">
                                                 <Button id="alertDialogButtonBackToListForBackToList"
-                                                        className={classes.dialogCreateProjectBackToList}
+                                                        className={classes.dialogCreateTaskBackToList}
                                                         href="./list"
                                                         color="primary"
                                                 >
@@ -351,7 +349,7 @@ function CreateTaskPage(props) {
 
                     <Grid container item xs={12} justify="center">
                         <Button
-                            id="alertDialogButtonForCreateProject"
+                            id="alertDialogButtonForCreateTask"
                             className="backToList"
                             variant="contained"
                             color="primary"
@@ -385,7 +383,7 @@ function CreateTaskPage(props) {
                                 <DialogActions>
                                     <Grid container spacing={2}>
                                         <Grid container item xs={6} justify="center">
-                                            <Button id="alertDialogButtonCancelForCreatProject"
+                                            <Button id="alertDialogButtonCancelForCreatTask"
                                                     className={classes.dialogCancelButton}
                                                     onClick={handleCloseBackToList}
                                                     color="primary"
@@ -395,7 +393,7 @@ function CreateTaskPage(props) {
                                         </Grid>
                                         <Grid container item xs={6} justify="center">
                                             <Button
-                                                id="alertDialogButtonProceedForCreateProject"
+                                                id="alertDialogButtonProceedForCreateTask"
                                                 className={classes.dialogProceedButton}
                                                 href="./list"
                                                 color="primary"
@@ -433,7 +431,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const TransitionCreateProject = React.forwardRef(function Transition(props, ref) {
+const TransitionCreateTask = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
