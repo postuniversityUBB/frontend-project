@@ -214,7 +214,7 @@ function ListTasks(props) {
 						actions={[
 							{
 								icon: () => <DeleteIcon />,
-								tooltip: 'Delete Project',
+								tooltip: 'Delete Task',
 								onClick: (event, rowData) => handleDeleteTask(rowData)
 							}
 						]}
