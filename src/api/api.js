@@ -59,9 +59,9 @@ export const getTasksForProject = async projectCode => {
 	}
 }
 
-export const postTask = async payload => {
+export const postTask = async (payload, projectCode) => {
 	try {
-		await axios.post(`${API_URL}/tasks`, payload, {
+		await axios.post(`${API_URL}/projects/${projectCode}/tasks`, payload, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},

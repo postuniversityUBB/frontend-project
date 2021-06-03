@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { useForm} from "react-hook-form";
+import { useLocation } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { makeStyles, FormControl, TextField, Grid, Button, RootRef, Backdrop } from '@material-ui/core';
 import { Dialog, DialogActions, DialogContent, DialogContentText, Slide} from '@material-ui/core';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
@@ -114,10 +115,16 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function CreateTaskPage() {
+function CreateTaskPage(props) {
     const domRef = useRef();
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
+
+    const location = useLocation();
+    const projectCode = location.state.projectCode;
+    const projectTitle = location.state.projectTitle;
+    console.log("projectCode", projectCode);
+    console.log("projectTitle", projectTitle);
 
     const SubmitButton = (props) => ( <button {...props} type="submit" />);
 
@@ -178,6 +185,7 @@ function CreateTaskPage() {
         setTitle('');
         setTaskStatus('');
         setDescription('');
+        setAssignedToUserCode('');
         setDeadline(handleResetDatePickerDeadline);
     }
 
@@ -188,9 +196,9 @@ function CreateTaskPage() {
             ...values
         };
         payload.deadline = formatDate(values.deadline);
-
+        console.log("payload", payload);
         try {
-            postTask(payload);
+            postTask(payload, projectCode);
             isOpenCreateProject(true);
             handleClickOpenCreateProjectSnackbar('success');
         } catch (err) {
@@ -200,7 +208,7 @@ function CreateTaskPage() {
 
   return (
     <div className="createEntity">
-        <h3 id="headerCreateProject" className="header">Create Task</h3>
+        <h3 id="headerCreateProject" className="header">Create Task for {projectTitle}</h3>
         <RootRef rootRef={domRef}>
             <form onSubmit={handleSubmit(onSubmit)} autocomplete="off" noValidate>
                 <FormControl id="titleForm" className={classes.formControl}>

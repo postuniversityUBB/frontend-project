@@ -20,7 +20,7 @@ import {
 	ViewColumn,
 } from "@material-ui/icons"
 import DeleteIcon from '@material-ui/icons/Delete'
-import { Redirect } from "react-router-dom"
+import { Redirect, useHistory } from "react-router-dom"
 
 import { getTasksForProject } from "../../../api/api"
 import { deleteTask } from "../../../api/api"
@@ -82,6 +82,15 @@ function ListTasks(props) {
 	const [data, setData] = useState([])
 	const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")))
 
+	const history = useHistory()
+	const handleRedirectToCreateTask = () => {
+		history.push({
+			pathname: "/task/create",
+			search: `?project=${projectTitle}`,
+			state: { projectCode: projectCode, projectTitle: projectTitle },
+		})
+	}
+
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -123,7 +132,7 @@ function ListTasks(props) {
 									id="buttonToCreateTask"
 									className="inactive-button"
 									aria-label="add new task"
-									href="/task/create"
+									onClick={handleRedirectToCreateTask}
 								>
 									<AddIcon />
 								</Fab>
