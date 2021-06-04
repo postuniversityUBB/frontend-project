@@ -20,7 +20,7 @@ import {
 	ViewColumn,
 } from "@material-ui/icons"
 import DeleteIcon from '@material-ui/icons/Delete'
-import { Redirect, useHistory } from "react-router-dom"
+import { Redirect, useHistory, useLocation } from "react-router-dom"
 
 import { getTasksForProject } from "../../../api/api"
 import { deleteTask } from "../../../api/api"
@@ -75,8 +75,9 @@ const handleDeleteTask = rowData => {
 
 function ListTasks(props) {
 	const table = tableStyles()
-    const projectCode = props.location.state.projectCode;
-    const projectTitle = props.location.state.projectTitle;
+    const location = useLocation();
+    const projectCode = location.state.projectCode;
+    const projectTitle = location.state.projectTitle;
 
 	const [isLoading, setIsLoading] = useState(true)
 	const [data, setData] = useState([])
@@ -151,7 +152,7 @@ function ListTasks(props) {
 						icons={tableIcons}
 						columns={[
 							{
-								title: "Project Name",
+								title: "Task Name",
 								field: "title",
 								render: rowData => (
 									<div className={table.name}>{rowData.title}</div>

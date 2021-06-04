@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { makeStyles, FormControl, TextField, Grid, Button, RootRef, Backdrop } from '@material-ui/core';
-import { Dialog, DialogActions, DialogContent, DialogContentText, Slide} from '@material-ui/core';
+import { Dialog, DialogActions, DialogContent, DialogContentText, Slide, MenuItem} from '@material-ui/core';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import 'date-fns';
@@ -126,6 +126,28 @@ function CreateTaskPage() {
 
     const SubmitButton = (props) => ( <button {...props} type="submit" />);
 
+    const taskStatuses = [
+        {
+          value: 'DEV_ON_DESK',
+          label: 'Dev on desk',
+        },
+        {
+          value: 'DEV_IN_PROGRESS',
+          label: 'Dev in progress',
+        },
+        {
+          value: 'TESTING',
+          label: 'Testing',
+        },
+        {
+          value: 'CANCELLED',
+          label: 'Cancelled',
+        },
+        {
+          value: 'COMPLETED',
+          label: 'Completed',
+        },
+    ];
     const [title, setTitle] = useState('');
     const [taskStatus, setTaskStatus] = useState('');
     const [description, setDescription] = useState('');
@@ -135,16 +157,21 @@ function CreateTaskPage() {
     const [openBackToList, isOpenBackToList] = useState(false);
     const [openCreateTask, isOpenCreateTask] = useState(false);
 
+    const history = useHistory()
+	const handleRedirectToListTask = () => {
+		history.push({
+			pathname: "/task/list",
+			search: `?project=${projectTitle}`,
+			state: { projectCode: projectCode, projectTitle: projectTitle },
+		})
+	}
+
     const handleClickOpenCreateTaskSnackbar = (variant) => {
       enqueueSnackbar('New task successfully created!', {variant});
     };
 
     const handlePopUpBackToList = () => {
         isOpenBackToList(true);
-    };
-
-    const handleClickOpenBackToList = () => {
-        window.open('./list','_self');
     };
 
     const handleCloseBackToList = () => {
@@ -224,19 +251,26 @@ function CreateTaskPage() {
                     />
                 </FormControl>
 
-                <FormControl id="taskStatusForm" className={classes.formControl}>
+                <FormControl id="taskStatusForm" className={classes.formControl}>                    
                     <TextField
                         id="taskStatus"
                         type="text"
                         name="taskStatus"
-                        value ={taskStatus}
                         {...register("taskStatus")}
-                        onChange={handleChangeTaskStatus}
-                        className={classes.textField}
+                        select
                         label="Task Status"
+                        value ={taskStatus}
+                        onChange={handleChangeTaskStatus}    
+                        className={classes.textField}                    
                         placeholder="Task Status"
                         InputLabelProps={{shrink: true,}}
-                    />
+                    >
+                        {taskStatuses.map((status, index) => (
+                            <MenuItem key={index} value={status.value}>
+                                {status.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
                 </FormControl>
 
                 <FormControl id="descriptionForm" className={classes.formControl}>
@@ -335,7 +369,7 @@ function CreateTaskPage() {
                                             <Grid container item xs={6} justify="center">
                                                 <Button id="alertDialogButtonBackToListForBackToList"
                                                         className={classes.dialogCreateTaskBackToList}
-                                                        href="./list"
+                                                        onClick={handleRedirectToListTask}
                                                         color="primary"
                                                 >
                                                     Back to List
@@ -356,7 +390,7 @@ function CreateTaskPage() {
                             size="large"
                             onClick={ () => {
                                 (title !== "" || taskStatus !== "" || description !== "" || 
-                                deadline !== null) ? handlePopUpBackToList() : handleClickOpenBackToList()}
+                                deadline !== null) ? handlePopUpBackToList() : handleRedirectToListTask()}
                             }
                         >
                             Back to list

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useForm} from "react-hook-form";
-import { makeStyles, FormControl, TextField, Grid, Button, RootRef, Backdrop } from '@material-ui/core';
-import { Dialog, DialogActions, DialogContent, DialogContentText, Slide} from '@material-ui/core';
+import { makeStyles, FormControl, TextField, Grid, Button, RootRef, Backdrop, MenuItem } from '@material-ui/core';
+import { Dialog, DialogActions, DialogContent, DialogContentText, Slide } from '@material-ui/core';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import 'date-fns';
@@ -121,6 +121,7 @@ function CreateProjectPage() {
 
     const SubmitButton = (props) => ( <button {...props} type="submit" />);
 
+    const projectStatuses = ['Dev', 'Alpha', 'Beta', 'Production'];
     const [title, setTitle] = useState('');
     const [projectStatus, setProjectStatus] = useState('');
     const [description, setDescription] = useState('');
@@ -213,19 +214,26 @@ function CreateProjectPage() {
                     />
                 </FormControl>
 
-                <FormControl id="projectStatusForm" className={classes.formControl}>
+                <FormControl id="projectStatusForm" className={classes.formControl}>                    
                     <TextField
                         id="projectStatus"
                         type="text"
                         name="projectStatus"
-                        value ={projectStatus}
                         {...register("projectStatus")}
-                        onChange={handleChangeProjectStatus}
-                        className={classes.textField}
+                        select
                         label="Project Status"
+                        value ={projectStatus}
+                        onChange={handleChangeProjectStatus}    
+                        className={classes.textField}                    
                         placeholder="Project Status"
                         InputLabelProps={{shrink: true,}}
-                    />
+                    >
+                        {projectStatuses.map((status, index) => (
+                            <MenuItem key={index} value={status}>
+                                {status}
+                            </MenuItem>
+                        ))}
+                    </TextField>
                 </FormControl>
 
                 <FormControl id="descriptionForm" className={classes.formControl}>
