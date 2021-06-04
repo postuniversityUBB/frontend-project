@@ -429,7 +429,7 @@ function CreateTaskPage() {
                                             <Button
                                                 id="alertDialogButtonProceedForCreateTask"
                                                 className={classes.dialogProceedButton}
-                                                href="./list"
+                                                onClick={handleRedirectToListTask}
                                                 color="primary"
                                             >
                                                 Proceed

@@ -113,36 +113,36 @@ function ListProjects() {
 				All Projects
 			</h3>
 
-			<div className="newEntity">
-				<Grid container spacing={1}>
-					<Grid container item xs={12} justify="flex-end">
-						{user?.role === "[ROLE_ADMIN]" ? (
-							<Tooltip
-								title="Create new project"
-								arrow
-								TransitionComponent={Fade}
-								TransitionProps={{ timeout: 600 }}
-								placement="left"
-								aria-label="create new project"
-							>
-								<Fab
-									id="buttonToCreateProject"
-									className="inactive-button"
-									aria-label="add new project"
-									href="/project/create"
-								>
-									<AddIcon />
-								</Fab>
-							</Tooltip>
-						) : null}
-					</Grid>
-				</Grid>
-			</div>
-
 			{isLoading ? (
 				<LoadingSpinner />
 			) : (
 				<>
+					<div className="newEntity">
+						<Grid container spacing={1}>
+							<Grid container item xs={12} justify="flex-end">
+								{user?.role === "[ROLE_ADMIN]" ? (
+									<Tooltip
+										title="Create new project"
+										arrow
+										TransitionComponent={Fade}
+										TransitionProps={{ timeout: 600 }}
+										placement="left"
+										aria-label="create new project"
+									>
+										<Fab
+											id="buttonToCreateProject"
+											className="inactive-button"
+											aria-label="add new project"
+											href="/project/create"
+										>
+											<AddIcon />
+										</Fab>
+									</Tooltip>
+								) : null}
+							</Grid>
+						</Grid>
+					</div>
+
 					<StyledDivider />
 					<MaterialTable
 						icons={tableIcons}

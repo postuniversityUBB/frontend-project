@@ -116,37 +116,36 @@ function ListTasks(props) {
 			<h3 id="headerListOfTasks" className="header">
 				All tasks of {projectTitle}
 			</h3>
-
-			<div className="newEntity">
-				<Grid container spacing={1}>
-					<Grid container item xs={12} justify="flex-end">
-						{user?.role === "[ROLE_ADMIN]" ? (
-							<Tooltip
-								title="Create new task"
-								arrow
-								TransitionComponent={Fade}
-								TransitionProps={{ timeout: 600 }}
-								placement="left"
-								aria-label="create new task"
-							>
-								<Fab
-									id="buttonToCreateTask"
-									className="inactive-button"
-									aria-label="add new task"
-									onClick={handleRedirectToCreateTask}
-								>
-									<AddIcon />
-								</Fab>
-							</Tooltip>
-						) : null}
-					</Grid>
-				</Grid>
-			</div>
-
 			{isLoading ? (
 				<LoadingSpinner />
-			) : (
+			) : (				
 				<>
+					<div className="newEntity">
+						<Grid container spacing={1}>
+							<Grid container item xs={12} justify="flex-end">
+								{user?.role === "[ROLE_ADMIN]" ? (
+									<Tooltip
+										title="Create new task"
+										arrow
+										TransitionComponent={Fade}
+										TransitionProps={{ timeout: 600 }}
+										placement="left"
+										aria-label="create new task"
+									>
+										<Fab
+											id="buttonToCreateTask"
+											className="inactive-button"
+											aria-label="add new task"
+											onClick={handleRedirectToCreateTask}
+										>
+											<AddIcon />
+										</Fab>
+									</Tooltip>
+								) : null}
+							</Grid>
+						</Grid>
+					</div>
+
 					<StyledDivider />
 					<MaterialTable
 						icons={tableIcons}
