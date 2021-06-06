@@ -199,7 +199,7 @@ function ListProjects() {
 							},
 						]}
 						data={data}
-						actions={[
+						actions={ user?.role === "[ROLE_ADMIN]" ? [
 							{
 								icon: () => <AssignmentIcon />,
 								tooltip: "View tasks",
@@ -210,7 +210,11 @@ function ListProjects() {
 								tooltip: 'Delete Project',
 								onClick: (event, rowData) => handleDeleteProject(rowData)
 							}
-						]}
+						] : [{
+							icon: () => <AssignmentIcon />,
+							tooltip: "View tasks",
+							onClick: (event, rowData) => handleRedirectTasks(rowData),
+						}]}
 						options={{
 							search: true,
 							sorting: true,

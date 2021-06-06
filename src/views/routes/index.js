@@ -8,6 +8,7 @@ import Charts from '../pages/Statistics/Charts';
 import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
 import Logout from "../pages/Logout/Logout"
+import AboutPage from '../pages/AboutPage/AboutPage';
 
 const exactRoutes = (path, component) => ({
     path,
@@ -32,6 +33,7 @@ const baseRoutes = [
     exactRoutes("/login", Login),
     exactRoutes("/register", Register),
     exactRoutes("/log-out", Logout),
+    exactRoutes("/about", AboutPage),
 ];
 
 const redirects = [

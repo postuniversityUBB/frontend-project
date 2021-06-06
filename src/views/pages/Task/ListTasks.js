@@ -82,6 +82,7 @@ function ListTasks(props) {
 	const [isLoading, setIsLoading] = useState(true)
 	const [data, setData] = useState([])
 	const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")))
+	
 
 	const history = useHistory()
 	const handleRedirectToCreateTask = () => {
@@ -211,13 +212,13 @@ function ListTasks(props) {
 							},
 						]}
 						data={data}
-						actions={[
+						actions={ user?.role === "[ROLE_ADMIN]" ? [
 							{
 								icon: () => <DeleteIcon />,
 								tooltip: 'Delete Task',
 								onClick: (event, rowData) => handleDeleteTask(rowData)
 							}
-						]}
+						] : [] }
 						options={{
 							search: true,
 							sorting: true,

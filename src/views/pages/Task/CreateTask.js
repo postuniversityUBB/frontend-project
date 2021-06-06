@@ -1,14 +1,15 @@
 import React, { useState, useRef } from 'react';
 import { useLocation, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { makeStyles, FormControl, TextField, Grid, Button, RootRef, Backdrop } from '@material-ui/core';
-import { Dialog, DialogActions, DialogContent, DialogContentText, Slide, MenuItem} from '@material-ui/core';
+import { makeStyles, FormControl, TextField, Grid, Button, RootRef, Backdrop, Select, InputLabel } from '@material-ui/core';
+import { Dialog, DialogActions, DialogContent, DialogContentText, Slide, MenuItem } from '@material-ui/core';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import 'date-fns';
 import { SnackbarProvider, useSnackbar } from 'notistack';
 
 import { postTask } from "../../../api/api";
+import SelectUsers from '../../components/selectUsers/SelectUsers';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -16,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(22),
         width: 300,
     },
-    textField : {
+    textField: {
         width: 380,
     },
     keyboardDatePicker: {
@@ -124,28 +125,28 @@ function CreateTaskPage() {
     const projectCode = location.state.projectCode;
     const projectTitle = location.state.projectTitle;
 
-    const SubmitButton = (props) => ( <button {...props} type="submit" />);
+    const SubmitButton = (props) => (<button {...props} type="submit" />);
 
     const taskStatuses = [
         {
-          value: 'DEV_ON_DESK',
-          label: 'Dev on desk',
+            value: 'DEV_ON_DESK',
+            label: 'Dev on desk',
         },
         {
-          value: 'DEV_IN_PROGRESS',
-          label: 'Dev in progress',
+            value: 'DEV_IN_PROGRESS',
+            label: 'Dev in progress',
         },
         {
-          value: 'TESTING',
-          label: 'Testing',
+            value: 'TESTING',
+            label: 'Testing',
         },
         {
-          value: 'CANCELLED',
-          label: 'Cancelled',
+            value: 'CANCELLED',
+            label: 'Cancelled',
         },
         {
-          value: 'COMPLETED',
-          label: 'Completed',
+            value: 'COMPLETED',
+            label: 'Completed',
         },
     ];
     const [title, setTitle] = useState('');
@@ -153,21 +154,21 @@ function CreateTaskPage() {
     const [description, setDescription] = useState('');
     const [assignedToUserCode, setAssignedToUserCode] = useState('');
     const [deadline, setDeadline] = useState(null);
-    
+
     const [openBackToList, isOpenBackToList] = useState(false);
     const [openCreateTask, isOpenCreateTask] = useState(false);
 
     const history = useHistory()
-	const handleRedirectToListTask = () => {
-		history.push({
-			pathname: "/task/list",
-			search: `?project=${projectTitle}`,
-			state: { projectCode: projectCode, projectTitle: projectTitle },
-		})
-	}
+    const handleRedirectToListTask = () => {
+        history.push({
+            pathname: "/task/list",
+            search: `?project=${projectTitle}`,
+            state: { projectCode: projectCode, projectTitle: projectTitle },
+        })
+    }
 
     const handleClickOpenCreateTaskSnackbar = (variant) => {
-      enqueueSnackbar('New task successfully created!', {variant});
+        enqueueSnackbar('New task successfully created!', { variant });
     };
 
     const handlePopUpBackToList = () => {
@@ -197,7 +198,7 @@ function CreateTaskPage() {
     const handleChangeAssignedToUserCode = (event) => {
         setAssignedToUserCode(event.target.value);
     };
-    
+
     const handleDeadline = (date) => {
         setDeadline(date);
     };
@@ -231,220 +232,211 @@ function CreateTaskPage() {
         }
     }
 
-  return (
-    <div className="createEntity">
-        <h3 id="headerCreateTask" className="header">Create Task for {projectTitle}</h3>
-        <RootRef rootRef={domRef}>
-            <form onSubmit={handleSubmit(onSubmit)} autocomplete="off" noValidate>
-                <FormControl id="titleForm" className={classes.formControl}>
-                    <TextField
-                        id="title"
-                        type="text"
-                        name="title"
-                        value={title}
-                        {...register("title")}
-                        onChange={handleChangeTitle}
-                        className={classes.textField}
-                        label="Title"
-                        placeholder="Title"
-                        InputLabelProps={{shrink: true,}}
-                    />
-                </FormControl>
-
-                <FormControl id="taskStatusForm" className={classes.formControl}>                    
-                    <TextField
-                        id="taskStatus"
-                        type="text"
-                        name="taskStatus"
-                        {...register("taskStatus")}
-                        select
-                        label="Task Status"
-                        value ={taskStatus}
-                        onChange={handleChangeTaskStatus}    
-                        className={classes.textField}                    
-                        placeholder="Task Status"
-                        InputLabelProps={{shrink: true,}}
-                    >
-                        {taskStatuses.map((status, index) => (
-                            <MenuItem key={index} value={status.value}>
-                                {status.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </FormControl>
-
-                <FormControl id="descriptionForm" className={classes.formControl}>
-                    <TextField
-                        id="description"
-                        type="text"
-                        multiline
-                        rowsMax={3}
-                        name="description"
-                        value ={description}
-                        {...register("description")}
-                        onChange={handleChangeDescription}
-                        className={classes.textField}
-                        label="Description"
-                        placeholder="Description"
-                        InputLabelProps={{shrink: true,}}
-                    />
-                </FormControl>
-
-                <FormControl id="addedByUserCodeForm" className={classes.formControl}>
-                    <TextField
-                        id="assignedToUserCode"
-                        type="text"
-                        name="assignedToUserCode"
-                        value ={assignedToUserCode}
-                        {...register("assignedToUserCode")}
-                        onChange={handleChangeAssignedToUserCode}
-                        className={classes.textField}
-                        label="AssignedToUserCode"
-                        placeholder="AssignedToUserCode"
-                        InputLabelProps={{shrink: true,}}
-                    />
-                </FormControl>
-
-                <FormControl className={classes.formControl}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <DatePicker
-                            id="deadline"
-                            name="deadline"
-                            value={deadline}
-                            {...register("deadline")}
-                            onChange={date => handleDeadline(date)}
-                            className={classes.keyboardDatePicker}
-                            format="dd/MM/yyyy"
-                            KeyboardButtonProps={{
-                                'aria-label': 'deadline',
-                            }}
-                            label="Deadline"
-                            placeholder="Deadline   dd/mm/yyyy"
-                            InputLabelProps={{shrink: true,}}
-                            autoOk={true}
+    return (
+        <div className="createEntity">
+            <h3 id="headerCreateTask" className="header">Create Task for {projectTitle}</h3>
+            <RootRef rootRef={domRef}>
+                <form onSubmit={handleSubmit(onSubmit)} autocomplete="off" noValidate>
+                    <FormControl id="titleForm" className={classes.formControl}>
+                        <TextField
+                            id="title"
+                            type="text"
+                            name="title"
+                            value={title}
+                            {...register("title")}
+                            onChange={handleChangeTitle}
+                            className={classes.textField}
+                            label="Title"
+                            placeholder="Title"
+                            InputLabelProps={{ shrink: true, }}
                         />
-                    </MuiPickersUtilsProvider>
-                </FormControl>
+                    </FormControl>
 
-                <Grid container spacing={1}>
-                    <Grid container item xs={12} justify="center">
-                        <Button
-                            id="submitCreateTask"
-                            className="inactive-button"
-                            component={SubmitButton}
-                            variant="contained"
-                            color="primary"
-                            size="large"
-                            href="#"
+                    <FormControl id="taskStatusForm" className={classes.formControl}>
+                        <TextField
+                            id="taskStatus"
+                            type="text"
+                            name="taskStatus"
+                            {...register("taskStatus")}
+                            select
+                            label="Task Status"
+                            value={taskStatus}
+                            onChange={handleChangeTaskStatus}
+                            className={classes.textField}
+                            placeholder="Task Status"
+                            InputLabelProps={{ shrink: true, }}
                         >
-                            Create Task
-                        </Button>
-                        <Backdrop open={openCreateTask} onClose={handleCloseCreateTask} elevation={18}>
-                            <Dialog
-                                open={openCreateTask}
-                                TransitionComponent={TransitionCreateTask}
-                                keepMounted
-                                aria-describedby="New task created!"
-                                disableBackdropClick
+                            {taskStatuses.map((status, index) => (
+                                <MenuItem key={index} value={status.value}>
+                                    {status.label}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </FormControl>
+
+                    <FormControl id="descriptionForm" className={classes.formControl}>
+                        <TextField
+                            id="description"
+                            type="text"
+                            multiline
+                            rowsMax={3}
+                            name="description"
+                            value={description}
+                            {...register("description")}
+                            onChange={handleChangeDescription}
+                            className={classes.textField}
+                            label="Description"
+                            placeholder="Description"
+                            InputLabelProps={{ shrink: true, }}
+                        />
+                    </FormControl>
+
+                    <FormControl id="addedByUserCodeForm" className={classes.formControl}>
+                       
+                                <SelectUsers register={register} handleChangeAssignedToUserCode={handleChangeAssignedToUserCode}/>
+                    </FormControl>
+
+                    <FormControl className={classes.formControl}>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <DatePicker
+                                id="deadline"
+                                name="deadline"
+                                value={deadline}
+                                {...register("deadline")}
+                                onChange={date => handleDeadline(date)}
+                                className={classes.keyboardDatePicker}
+                                format="dd/MM/yyyy"
+                                KeyboardButtonProps={{
+                                    'aria-label': 'deadline',
+                                }}
+                                label="Deadline"
+                                placeholder="Deadline   dd/mm/yyyy"
+                                InputLabelProps={{ shrink: true, }}
+                                autoOk={true}
+                            />
+                        </MuiPickersUtilsProvider>
+                    </FormControl>
+
+                    <Grid container spacing={1}>
+                        <Grid container item xs={12} justify="center">
+                            <Button
+                                id="submitCreateTask"
+                                className="inactive-button"
+                                component={SubmitButton}
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                                href="#"
                             >
-                                <DialogContent>
-                                    <DialogContentText id="alertDialogDescriptionNewTask" className={classes.dialogCreateTaskText}>
-                                        New task successfully created!
+                                Create Task
+                        </Button>
+                            <Backdrop open={openCreateTask} onClose={handleCloseCreateTask} elevation={18}>
+                                <Dialog
+                                    open={openCreateTask}
+                                    TransitionComponent={TransitionCreateTask}
+                                    keepMounted
+                                    aria-describedby="New task created!"
+                                    disableBackdropClick
+                                >
+                                    <DialogContent>
+                                        <DialogContentText id="alertDialogDescriptionNewTask" className={classes.dialogCreateTaskText}>
+                                            New task successfully created!
                                     </DialogContentText>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Grid container spacing={2}>
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Grid container spacing={2}>
                                             <Grid container item xs={6} justify="center">
                                                 <Button id="alertDialogButtonNewTaskForBacktoList"
-                                                        className={classes.dialogCreateTaskNewTask}
-                                                        onClick={() => {
-                                                            handleReset();
-                                                            handleCloseCreateTask();
-                                                        }}
-                                                        color="primary"
+                                                    className={classes.dialogCreateTaskNewTask}
+                                                    onClick={() => {
+                                                        handleReset();
+                                                        handleCloseCreateTask();
+                                                    }}
+                                                    color="primary"
                                                 >
                                                     New task
                                                 </Button>
                                             </Grid>
                                             <Grid container item xs={6} justify="center">
                                                 <Button id="alertDialogButtonBackToListForBackToList"
-                                                        className={classes.dialogCreateTaskBackToList}
-                                                        onClick={handleRedirectToListTask}
-                                                        color="primary"
+                                                    className={classes.dialogCreateTaskBackToList}
+                                                    onClick={handleRedirectToListTask}
+                                                    color="primary"
                                                 >
                                                     Back to List
                                                 </Button>
                                             </Grid>
                                         </Grid>
-                                </DialogActions>
-                            </Dialog>
-                        </Backdrop>
-                    </Grid>
+                                    </DialogActions>
+                                </Dialog>
+                            </Backdrop>
+                        </Grid>
 
-                    <Grid container item xs={12} justify="center">
-                        <Button
-                            id="alertDialogButtonForCreateTask"
-                            className="backToList"
-                            variant="contained"
-                            color="primary"
-                            size="large"
-                            onClick={ () => {
-                                (title !== "" || taskStatus !== "" || description !== "" || 
-                                deadline !== null) ? handlePopUpBackToList() : handleRedirectToListTask()}
-                            }
-                        >
-                            Back to list
-                        </Button>
-                        <Backdrop open={openBackToList} onClose={handleCloseBackToList} elevation={18}>
-                            <Dialog
-                                open={openBackToList}
-                                TransitionComponent={Transition}
-                                keepMounted
-                                onClose={handleCloseBackToList}
-                                aria-labelledby="Confirmation"
-                                aria-describedby="Do you want to save changes to this document before closing?"
-                                disableBackdropClick
+                        <Grid container item xs={12} justify="center">
+                            <Button
+                                id="alertDialogButtonForCreateTask"
+                                className="backToList"
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                                onClick={() => {
+                                    (title !== "" || taskStatus !== "" || description !== "" ||
+                                        deadline !== null) ? handlePopUpBackToList() : handleRedirectToListTask()
+                                }
+                                }
                             >
-                                <DialogContent>
-                                    <DialogContentText id="alertdDialogTitleBackToList" className={classes.dialogBackToListTitle}>
-                                        Confirmation
+                                Back to list
+                        </Button>
+                            <Backdrop open={openBackToList} onClose={handleCloseBackToList} elevation={18}>
+                                <Dialog
+                                    open={openBackToList}
+                                    TransitionComponent={Transition}
+                                    keepMounted
+                                    onClose={handleCloseBackToList}
+                                    aria-labelledby="Confirmation"
+                                    aria-describedby="Do you want to save changes to this document before closing?"
+                                    disableBackdropClick
+                                >
+                                    <DialogContent>
+                                        <DialogContentText id="alertdDialogTitleBackToList" className={classes.dialogBackToListTitle}>
+                                            Confirmation
                                     </DialogContentText>
-                                    <DialogContentText id="alertDialogDescriptionBackToList" className={classes.dialogBackToListDescription}>
-                                        <p>Do you want to save changes to this document before closing?</p>
-                                        <p>Unsaved changes will be lost.</p>
-                                    </DialogContentText>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Grid container spacing={2}>
-                                        <Grid container item xs={6} justify="center">
-                                            <Button id="alertDialogButtonCancelForCreatTask"
+                                        <DialogContentText id="alertDialogDescriptionBackToList" className={classes.dialogBackToListDescription}>
+                                            <p>Do you want to save changes to this document before closing?</p>
+                                            <p>Unsaved changes will be lost.</p>
+                                        </DialogContentText>
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Grid container spacing={2}>
+                                            <Grid container item xs={6} justify="center">
+                                                <Button id="alertDialogButtonCancelForCreatTask"
                                                     className={classes.dialogCancelButton}
                                                     onClick={handleCloseBackToList}
                                                     color="primary"
-                                            >
-                                                Cancel
+                                                >
+                                                    Cancel
                                             </Button>
-                                        </Grid>
-                                        <Grid container item xs={6} justify="center">
-                                            <Button
-                                                id="alertDialogButtonProceedForCreateTask"
-                                                className={classes.dialogProceedButton}
-                                                onClick={handleRedirectToListTask}
-                                                color="primary"
-                                            >
-                                                Proceed
+                                            </Grid>
+                                            <Grid container item xs={6} justify="center">
+                                                <Button
+                                                    id="alertDialogButtonProceedForCreateTask"
+                                                    className={classes.dialogProceedButton}
+                                                    onClick={handleRedirectToListTask}
+                                                    color="primary"
+                                                >
+                                                    Proceed
                                             </Button>
+                                            </Grid>
                                         </Grid>
-                                    </Grid>
-                                </DialogActions>
-                            </Dialog>
-                        </Backdrop>
+                                    </DialogActions>
+                                </Dialog>
+                            </Backdrop>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </form>
-        </RootRef>
-    </div>
-  );
+                </form>
+            </RootRef>
+        </div>
+    );
 };
 
 function formatDate(dateString) {
@@ -454,7 +446,7 @@ function formatDate(dateString) {
 
     const dateArray = dateString.split("/");
     const [day, month, year] = dateArray;
-    const newDate =  new Date(year, month-1, day);
+    const newDate = new Date(year, month - 1, day);
 
     const moment = require('moment');
     const newDateFormat = moment(newDate).format('YYYY-MM-DD');

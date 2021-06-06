@@ -11,6 +11,7 @@ import {
     Grid,
     Button
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 function Banner(props) {
     const contentPosition = props.contentPosition ? props.contentPosition : "left"
@@ -30,7 +31,7 @@ function Banner(props) {
                 </Typography>
 
                 <Button variant="outlined" className="AboutEBSButton">
-                    About EBS
+                    <Link to="/about"> About  </Link>
                 </Button>
             </CardContent>
         </Grid>
