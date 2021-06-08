@@ -21,6 +21,7 @@ import {
 } from "@material-ui/icons"
 import AssignmentIcon from "@material-ui/icons/Assignment"
 import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
 import { Redirect, useHistory } from "react-router-dom"
 
 import { getProjects, deleteProject } from "../../../api/api"
@@ -75,6 +76,14 @@ function ListProjects() {
 		})
 	}
 
+	const handleRedirectToEditProject = rowData => {
+		history.push({
+			pathname: "/project/edit",
+			search: `?project=${rowData.title}`,
+			state: { project: rowData },
+		})
+	}
+	
 	const handleDeleteProject = rowData => {
 		const fetchData = async () => {
 			try {
@@ -87,7 +96,7 @@ function ListProjects() {
 		}
 		fetchData()
 	}
-
+	
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -209,6 +218,13 @@ function ListProjects() {
 								icon: () => <DeleteIcon />,
 								tooltip: 'Delete Project',
 								onClick: (event, rowData) => handleDeleteProject(rowData)
+							},
+							{
+								icon: () => <EditIcon />,
+								tooltip: 'Edit Project',
+								onClick: (event, rowData) => {
+									handleRedirectToEditProject(rowData);
+								} 
 							}
 						] : [{
 							icon: () => <AssignmentIcon />,

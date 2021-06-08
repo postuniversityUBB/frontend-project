@@ -160,13 +160,13 @@ function ListUsers() {
 						}}
 						localization={{
 							body: {
-								emptyDataSourceMessage: "No project found.",
+								emptyDataSourceMessage: "No user found.",
 							},
 							toolbar: {
 								searchPlaceholder: "Search",
 							},
 							pagination: {
-								labelRowsSelect: "projects per page",
+								labelRowsSelect: "users per page",
 								firstAriaLabel: "paginationFirstPage",
 								previousAriaLabel: "paginationPreviousPage",
 								nextAriaLabel: "paginationNextPage",

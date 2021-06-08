@@ -1,6 +1,7 @@
 import Index from '../pages/Home/Index';
 import ListProjects from '../pages/Project/ListProjects';
 import CreateProject from '../pages/Project/CreateProject';
+import EditProject from '../pages/Project/EditProject';
 import ListTasks from '../pages/Task/ListTasks';
 import CreateTask from '../pages/Task/CreateTask';
 import ListUsers from '../pages/User/ListUsers';
@@ -26,6 +27,7 @@ const baseRoutes = [
     exactRoutes("/home/index", Index),
     exactRoutes("/project/list", ListProjects),
     exactRoutes("/project/create", CreateProject),
+    exactRoutes("/project/edit", EditProject),
     exactRoutes("/task/list", ListTasks),
     exactRoutes("/task/create", CreateTask),
     exactRoutes("/user/list", ListUsers),
