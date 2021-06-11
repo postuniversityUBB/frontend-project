@@ -10,6 +10,8 @@ import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
 import Logout from "../pages/Logout/Logout"
 import AboutPage from '../pages/AboutPage/AboutPage';
+import ContactPage from '../pages/ContactPage/ContactPage';
+
 
 const exactRoutes = (path, component) => ({
     path,
@@ -22,6 +24,8 @@ const redirect = (from, to) => ({
     to,
     exact: true,
 });
+
+
 
 const baseRoutes = [
     exactRoutes("/home/index", Index),
@@ -36,6 +40,7 @@ const baseRoutes = [
     exactRoutes("/register", Register),
     exactRoutes("/log-out", Logout),
     exactRoutes("/about", AboutPage),
+    exactRoutes("/contact", ContactPage)
 ];
 
 const redirects = [

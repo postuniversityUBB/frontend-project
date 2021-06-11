@@ -149,23 +149,23 @@ export default function Navbar() {
 									>
 										Hi, {user.firstName}!
 									</Typography>
-									<Button
+									<Button component={Link} to={'/contact'}
 										size="large"
 										color="primary"
-										href="#buttons"
+				
 										className={classes.menuButtons}
 									>
 										Contact
 									</Button>
-									<Button
+									<Button component={Link} to={'/about'}
 										size="large"
 										color="primary"
-										href="#buttons"
+										
 										className={classes.menuButtons}
 									>
 										About
 									</Button>
-									<Button
+									<Button 
 										size="large"
 										color="primary"
 										href="/log-out"
@@ -176,34 +176,30 @@ export default function Navbar() {
 								</>
 							) : (
 								<>
-									<Button
+									<Button component={Link} to={'/contact'}
 										size="large"
 										color="primary"
-										href="#buttons"
 										className={classes.menuButtons}
 									>
 										Contact
 									</Button>
-									<Button
+									<Button component={Link} to={'/about'}
 										size="large"
 										color="primary"
-										href="#buttons"
 										className={classes.menuButtons}
 									>
 										About
 									</Button>
-									<Button
+									<Button component={Link} to={'/login'}
 										size="large"
 										color="primary"
-										href="/login"
 										className={classes.menuButtons}
 									>
 										Login
 									</Button>
-									<Button
+									<Button component={Link} to={'/register'}
 										size="large"
 										color="primary"
-										href="/register"
 										className={classes.menuButtons}
 									>
 										Register
