@@ -205,6 +205,7 @@ function ListProjects() {
 								render: rowData => formattedDate(rowData.deadline),
 								searchable: true,
 								sortable: true,
+								customFilterAndSearch: (searchValue, rowData) => handleSearchDeadline(searchValue, rowData)
 							},
 						]}
 						data={data}
@@ -280,6 +281,7 @@ function ListProjects() {
 }
 
 function formattedDate(date) {
+	console.log("date", date)
 	if (date === null) {
 		return "N/A"
 	}
@@ -289,5 +291,13 @@ function formattedDate(date) {
 		sliceDate.slice(8, 10) + "/" + date.slice(5, 7) + "/" + date.slice(0, 4)
 	)
 }
+
+function handleSearchDeadline(searchValue, rowData) {
+    var date = formattedDate(rowData.deadline);
+    if (date.indexOf(searchValue) !== -1) {
+        return true;
+    }
+    return false;
+};
 
 export default ListProjects

@@ -30,8 +30,8 @@ function Banner(props) {
                     {props.item.Caption}
                 </Typography>
 
-                <Button variant="outlined" className="AboutEBSButton">
-                    <Link to="/about"> About  </Link>
+                <Button variant="outlined" className="AboutEBSButton" href="/about">
+                    About
                 </Button>
             </CardContent>
         </Grid>
