@@ -1,8 +1,15 @@
-import { InputLabel, MenuItem, Select } from '@material-ui/core'
+import { InputLabel, MenuItem, Select, makeStyles } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { getUsers } from '../../../api/api'
 
+const useStyles = makeStyles((theme) => ({
+    dropdown: {
+        width: 380,
+    },
+}));
+
 const SelectUsers = ({handleChangeAssignedToUserCode, register}) => {
+    const classes = useStyles();
 
     const [users, setUsers] = useState([])
     useEffect(() => {
@@ -14,15 +21,26 @@ const SelectUsers = ({handleChangeAssignedToUserCode, register}) => {
 
     return (
         <>
-            <InputLabel id="demo-simple-select-outlined-label">
+            <InputLabel id="assignedTo">
                 User
 			</InputLabel>
+                            {/* type="text"
+                            name="taskStatus"
+                            {...register("taskStatus")}
+                            select
+                            label="Task Status"
+                            value={taskStatus}
+                            onChange={handleChangeTaskStatus}
+                            className={classes.textField}
+                            placeholder="Task Status"
+                            InputLabelProps={{ shrink: true, }} */}
             <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
+                labelId="assignedToUserCode"
+                id="assignedToUserCode"
                 label="Role"
                 onChange={handleChangeAssignedToUserCode}
                 {...register("assignedToUserCode")}
+                className={classes.dropdown}
             >   
             {users?.map(user => {
                 return <MenuItem key={user.userCode} value={user.userCode}>{user.username}</MenuItem>

@@ -3,7 +3,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import React from 'react';
 import { useState } from 'react';
@@ -20,7 +19,7 @@ const ContactPage = () => {
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const [message, setMessage] = useState('')
-    const [firstNameError, setFirstnameError] = useState(false)
+    const [firstNameError, setFirstNameError] = useState(false)
     const [lastNameError, setLastNameError] = useState(false)
     const [emailError, setEmailError] = useState(false)
     const [phoneError, setPhoneError] = useState(false)
@@ -30,23 +29,23 @@ const ContactPage = () => {
         e.preventDefault()
         console.log(firstName, lastName, email, phone, message)
 
-        if (firstName == '') {
-            setFirstnameError(true)
+        if (firstName === '') {
+            setFirstNameError(true)
         }
 
-        if (lastName == '') {
+        if (lastName === '') {
             setLastNameError(true)
         }
 
-        if (email == '') {
+        if (email === '') {
             setEmailError(true)
         }
 
-        if (phone == '') {
+        if (phone === '') {
             setPhoneError(true)
         }
 
-        if (message == '') {
+        if (message === '') {
             setMesssageError(true)
         }
 
@@ -54,7 +53,7 @@ const ContactPage = () => {
         if (firstName && lastName && email && phone && message) {
             handleClickOpen()
             reset()
-            setFirstnameError(false)
+            setFirstNameError(false)
             setLastNameError(false)
             setEmailError(false)
             setPhoneError(false)
@@ -82,7 +81,7 @@ const ContactPage = () => {
 
     return (
         <div className="listEntities">
-            <Grid>
+            <Grid style={{ padding: "90px 0px" }}>
                 <Card style={{ maxWidth: 450, padding: "20px 5px", margin: "0 auto" }}>
                     <CardContent>
                         <Typography gutterBottom variant="h5">

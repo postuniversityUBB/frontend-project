@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useLocation, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { makeStyles, FormControl, TextField, Grid, Button, RootRef, Backdrop, Select, InputLabel } from '@material-ui/core';
+import { makeStyles, FormControl, TextField, Grid, Button, RootRef, Backdrop } from '@material-ui/core';
 import { Dialog, DialogActions, DialogContent, DialogContentText, Slide, MenuItem } from '@material-ui/core';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -291,9 +291,8 @@ function CreateTaskPage() {
                         />
                     </FormControl>
 
-                    <FormControl id="addedByUserCodeForm" className={classes.formControl}>
-                       
-                                <SelectUsers register={register} handleChangeAssignedToUserCode={handleChangeAssignedToUserCode}/>
+                    <FormControl id="addedByUserCodeForm" className={classes.formControl}>                       
+                        <SelectUsers register={register} handleChangeAssignedToUserCode={handleChangeAssignedToUserCode}/>
                     </FormControl>
 
                     <FormControl className={classes.formControl}>

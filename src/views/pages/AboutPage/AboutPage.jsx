@@ -24,8 +24,6 @@ const useStyles = makeStyles((theme) => {
         }
 
     }
-
-
 })
 
 
@@ -36,11 +34,10 @@ const AboutPage = () => {
     return (
         <div className="listEntities">
             <Typography variant="h4" align="center" className={classes.title}>About us</Typography>
-            <Grid container spacing={2} >
+            <Grid container spacing={3} style={{ padding: "34px 0px" }}>
                 <Grid item xs={6} >
                     <Card className={classes.root}>
                         <CardActionArea>
-
                             <CardContent>
                                 <Typography gutterBottom variant="h5" component="h2">
                                     The power of teamwork
@@ -57,13 +54,11 @@ const AboutPage = () => {
 
                             />
                         </CardActionArea>
-
                     </Card>
                 </Grid>
                 <Grid item xs={6} >
                     <Card className={classes.root}>
                         <CardActionArea>
-
                             <CardContent>
                                 <Typography gutterBottom variant="h5" component="h2">
                                     Values to live by
@@ -77,13 +72,9 @@ const AboutPage = () => {
                                 image={valuesImage}
                             />
                         </CardActionArea>
-
                     </Card>
                 </Grid>
             </Grid>
-
-
-
         </div >
     )
 }

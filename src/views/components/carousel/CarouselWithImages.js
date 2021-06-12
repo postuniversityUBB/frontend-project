@@ -11,7 +11,6 @@ import {
     Grid,
     Button
 } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 
 function Banner(props) {
     const contentPosition = props.contentPosition ? props.contentPosition : "left"
