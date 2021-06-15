@@ -100,6 +100,21 @@ export const deleteTask = async taskCode => {
 		throw err
 	}
 }
+export const updateTask = async (payload,taskCode) => {
+console.log("🚀 ~ file: api.js ~ line 104 ~ updateTask ~ taskCode", taskCode)
+console.log("🚀 ~ file: api.js ~ line 104 ~ updateTask ~ payload", payload)
+	try {
+		const { status } = await axios.put(`${API_URL}/tasks/${taskCode}`,payload, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		console.log("🚀 ~ file: api.js ~ line 92 ~ update task")
+		return status;
+	} catch (err) {
+		throw err
+	}
+}
 
 export const getUsers = async () => {
 	try {

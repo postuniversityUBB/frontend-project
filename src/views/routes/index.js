@@ -11,6 +11,7 @@ import Register from '../pages/Register/Register';
 import Logout from "../pages/Logout/Logout"
 import AboutPage from '../pages/AboutPage/AboutPage';
 import ContactPage from '../pages/ContactPage/ContactPage';
+import EditTask from '../pages/Task/EditTask';
 
 
 const exactRoutes = (path, component) => ({
@@ -34,6 +35,7 @@ const baseRoutes = [
     exactRoutes("/project/edit", EditProject),
     exactRoutes("/task/list", ListTasks),
     exactRoutes("/task/create", CreateTask),
+    exactRoutes("/task/edit",EditTask),
     exactRoutes("/user/list", ListUsers),
     exactRoutes("/statistics/chart", Charts),
     exactRoutes("/login", Login),

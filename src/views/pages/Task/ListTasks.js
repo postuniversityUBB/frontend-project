@@ -20,6 +20,7 @@ import {
 	ViewColumn,
 } from "@material-ui/icons"
 import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
 import { Redirect, useHistory, useLocation } from "react-router-dom"
 
 import { getTasksForProject } from "../../../api/api"
@@ -110,6 +111,16 @@ function ListTasks(props) {
 
 	if (!user) {
 		return <Redirect to="/" />
+	}
+
+	const handleRedirectToEditTask = (rowData) =>{
+	console.log("🚀 ~ file: ListTasks.js ~ line 117 ~ handleRedirectToEditTask ~ rowData", rowData)
+	history.push({
+		pathname:"/task/edit",
+		search:`?task=${rowData.title}`,
+		state:{task:rowData, projectTitle: projectTitle}
+	})
+		
 	}
 
 	return (
@@ -219,6 +230,11 @@ function ListTasks(props) {
 								icon: () => <DeleteIcon />,
 								tooltip: 'Delete Task',
 								onClick: (event, rowData) => handleDeleteTask(rowData)
+							},
+							{
+								icon: () => <EditIcon />,
+								tooltip: 'Edit Task',
+								onClick: (event, rowData) => handleRedirectToEditTask(rowData)
 							}
 						] : [] }
 						options={{

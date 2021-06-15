@@ -1,6 +1,7 @@
 import { InputLabel, MenuItem, Select, makeStyles } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { getUsers } from '../../../api/api'
+import { v4 as uuidv4 } from "uuid"
 
 const useStyles = makeStyles((theme) => ({
     dropdown: {
@@ -38,12 +39,12 @@ const SelectUsers = ({handleChangeAssignedToUserCode, register}) => {
                 labelId="assignedToUserCode"
                 id="assignedToUserCode"
                 label="Role"
-                onChange={handleChangeAssignedToUserCode}
+                onChange={e =>console.log(e)}
                 {...register("assignedToUserCode")}
                 className={classes.dropdown}
             >   
             {users?.map(user => {
-                return <MenuItem key={user.userCode} value={user.userCode}>{user.username}</MenuItem>
+                return <MenuItem key={uuidv4()} value={user.userCode}>{user.username}</MenuItem>
             })}
                
             </Select>
