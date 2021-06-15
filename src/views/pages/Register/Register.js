@@ -104,7 +104,7 @@ export default function Register() {
 					{done ? (
 						<>
 							<Typography>
-								You are now registerd! Wellcome to the team
+								You are now registered! Welcome to the team!
 							</Typography>
 							<Typography>
 								Click here to <Link to="/login">login</Link>{" "}

@@ -116,7 +116,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function EditProjectPage() {
+const EditProjectPage = () => {
     const domRef = useRef();
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
@@ -142,10 +142,6 @@ function EditProjectPage() {
         {
             value: 'production',
             label: 'Production',
-        },
-        {
-            value: 'completed',
-            label: 'Completed',
         },
     ];
     const [title, setTitle] = useState(project.title);
@@ -203,19 +199,11 @@ function EditProjectPage() {
     const onSubmit = (values, e) => {
         e.preventDefault();
         const payload = {
-            ...values
-        };
-        if (!payload.title) {
-            payload.title = title;
-        }
-        if (!payload.description) {
-            payload.description = description;
-        }
-        if (!payload.projectStatus) {
-            payload.projectStatus = projectStatus;
-        }
-        !payload.deadline ? payload.deadline = deadline 
-                          : payload.deadline = formatDate(values.deadline);
+			title: title,
+			description: description,            
+			projectStatus: projectStatus,
+			deadline: values.deadline ? formatDate(values.deadline) : deadline,
+		}
 
         try {
             editProject(project.projectCode, payload);
@@ -330,7 +318,7 @@ function EditProjectPage() {
                             >
                                 <DialogContent>
                                     <DialogContentText id="alertDialogDescriptionEditProject" className={classes.dialogEditProjectText}>
-                                        {project.title} successfully edited!
+                                        Project successfully edited!
                                     </DialogContentText>
                                 </DialogContent>
                                 <DialogActions>
