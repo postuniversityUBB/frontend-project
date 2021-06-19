@@ -26,7 +26,7 @@ describe('create project page', () => {
 	});
 
 	test('should display correct input fields values', async () => {
-		const { findByLabelText, findAllByText, findByTestId } = render(
+		const { findByLabelText, findByTestId } = render(
             <Router>           
                 <CreateProject />
             </Router>

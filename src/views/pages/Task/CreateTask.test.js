@@ -14,14 +14,14 @@ describe('create task page', () => {
 
 		const pageTitle = await findByText('Create Task for', {exact: false});
 		const titleLabel = await findByLabelText('Title');
-		const projectStatusLabel = await findByLabelText('Task Status');
+		const taskStatusLabel = await findByLabelText('Task Status');
         const assignedToLabel = await findByTestId('assignedTo');
 		const descriptionLabel = await findByLabelText('Description');
 		const deadlineLabel = await findByLabelText('Deadline');
 
 		expect(pageTitle).toBeInTheDocument();
 		expect(titleLabel).toBeInTheDocument();
-		expect(projectStatusLabel).toBeInTheDocument();
+		expect(taskStatusLabel).toBeInTheDocument();
         expect(assignedToLabel).toBeInTheDocument();
 		expect(descriptionLabel).toBeInTheDocument();
 		expect(deadlineLabel).toBeInTheDocument();
@@ -37,16 +37,16 @@ describe('create task page', () => {
 		const titleLabel = await findByLabelText('Title');
 		fireEvent.change(titleLabel, { target: { value: 'Task1' } });
 
-		const projectStatusLabel = await findByTestId('taskStatus');
-		fireEvent.change(projectStatusLabel, { target: { value: 'TESTING' } });
+		const taskStatusLabel = await findByTestId('taskStatus');
+		fireEvent.change(taskStatusLabel, { target: { value: 'TESTING' } });
 
 		const descriptionLabel = await findByLabelText('Description');
 		fireEvent.change(descriptionLabel, { target: { value: 'Test description' } });
 
 		expect(titleLabel).toBeInTheDocument();
 		expect(titleLabel.value).toBe('Task1');
-		expect(projectStatusLabel).toBeInTheDocument();
-		expect(projectStatusLabel.value).toBe('TESTING');
+		expect(taskStatusLabel).toBeInTheDocument();
+		expect(taskStatusLabel.value).toBe('TESTING');
 		expect(descriptionLabel).toBeInTheDocument();
 		expect(descriptionLabel.value).toBe('Test description');
 	});
