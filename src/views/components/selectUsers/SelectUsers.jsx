@@ -25,16 +25,6 @@ const SelectUsers = ({handleChangeAssignedToUserCode, register}) => {
             <InputLabel id="assignedTo">
                 User
 			</InputLabel>
-                            {/* type="text"
-                            name="taskStatus"
-                            {...register("taskStatus")}
-                            select
-                            label="Task Status"
-                            value={taskStatus}
-                            onChange={handleChangeTaskStatus}
-                            className={classes.textField}
-                            placeholder="Task Status"
-                            InputLabelProps={{ shrink: true, }} */}
             <Select
                 labelId="assignedToUserCode"
                 id="assignedToUserCode"
@@ -42,6 +32,7 @@ const SelectUsers = ({handleChangeAssignedToUserCode, register}) => {
                 onChange={e =>console.log(e)}
                 {...register("assignedToUserCode")}
                 className={classes.dropdown}
+                inputProps={{ "data-testid": "assignedTo" }}
             >   
             {users?.map(user => {
                 return <MenuItem key={uuidv4()} value={user.userCode}>{user.username}</MenuItem>

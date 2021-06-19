@@ -121,9 +121,12 @@ const CreateTaskPage = () => {
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
 
-    const location = useLocation();
-    const projectCode = location.state.projectCode;
-    const projectTitle = location.state.projectTitle;
+	let project = {};
+	if (localStorage && localStorage.getItem('project')) {
+	   project = JSON.parse(localStorage.getItem('project'));
+	}
+    const projectCode = project.projectCode;
+    const projectTitle = project.title;
 
     const SubmitButton = (props) => (<button {...props} type="submit" />);
 
@@ -160,10 +163,11 @@ const CreateTaskPage = () => {
 
     const history = useHistory()
     const handleRedirectToListTask = () => {
+        localStorage.setItem('project', JSON.stringify(project));
+
         history.push({
             pathname: "/task/list",
             search: `?project=${projectTitle}`,
-            state: { projectCode: projectCode, projectTitle: projectTitle },
         })
     }
 
@@ -265,6 +269,7 @@ const CreateTaskPage = () => {
                             className={classes.textField}
                             placeholder="Task Status"
                             InputLabelProps={{ shrink: true, }}
+                            inputProps={{ "data-testid": "taskStatus" }}
                         >
                             {taskStatuses.map((status, index) => (
                                 <MenuItem key={index} value={status.value}>

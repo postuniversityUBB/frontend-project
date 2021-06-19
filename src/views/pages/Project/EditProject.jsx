@@ -121,8 +121,10 @@ const EditProjectPage = () => {
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
 
-    const location = useLocation();
-    const project = location.state.project;
+    let project = {};
+	if (localStorage && localStorage.getItem('project')) {
+	   project = JSON.parse(localStorage.getItem('project'));
+	}
 
     const SubmitButton = (props) => ( <button {...props} type="submit" />);
 

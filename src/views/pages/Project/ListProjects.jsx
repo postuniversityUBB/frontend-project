@@ -69,18 +69,20 @@ const ListProjects = () => {
 	const history = useHistory()
 
 	const handleRedirectTasks = rowData => {
+		localStorage.setItem('project', JSON.stringify(rowData));
+
 		history.push({
 			pathname: "/task/list",
-			search: `?project=${rowData.title}`,
-			state: { projectCode: rowData.projectCode, projectTitle: rowData.title },
+			search: `?project=${rowData.title}`
 		})
 	}
 
-	const handleRedirectToEditProject = rowData => {
+	const handleRedirectToEditProject = rowData => {		
+		localStorage.setItem('project', JSON.stringify(rowData));
+
 		history.push({
 			pathname: "/project/edit",
 			search: `?project=${rowData.title}`,
-			state: { project: rowData },
 		})
 	}
 	

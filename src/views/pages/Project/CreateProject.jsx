@@ -227,6 +227,7 @@ const CreateProjectPage = () => {
                         className={classes.textField}                    
                         placeholder="Project Status"
                         InputLabelProps={{shrink: true,}}
+                        inputProps={{ "data-testid": "projectStatus" }}
                     >
                         {projectStatuses.map((status, index) => (
                             <MenuItem key={index} value={status}>
@@ -270,6 +271,7 @@ const CreateProjectPage = () => {
                             placeholder="Deadline   dd/mm/yyyy"
                             InputLabelProps={{shrink: true,}}
                             autoOk={true}
+                            inputProps={{ "data-testid": "deadline" }}
                         />
                     </MuiPickersUtilsProvider>
                 </FormControl>

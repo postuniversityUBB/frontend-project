@@ -159,10 +159,13 @@ const handleFormat = taskStatus => {
 	return value
 }
 const EditTaskPage = () => {
-	const location = useLocation()
-	const task = location.state.task
-	//const projectCode = location.state.task?.projectCode
-	const projectTitle = location.state.projectTitle
+	let task = {};
+	let project = {};
+	if (localStorage && localStorage.getItem('task') && localStorage.getItem('project')) {
+		task = JSON.parse(localStorage.getItem('task'));
+		project = JSON.parse(localStorage.getItem('project'));
+	}
+	const projectTitle = project.title;
     console.log("🚀 ~ file: EditTask.jsx ~ line 166 ~ EditTaskPage ~ projectTitle", projectTitle)
    
 	

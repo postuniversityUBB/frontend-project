@@ -75,22 +75,26 @@ const handleDeleteTask = rowData => {
 }
 
 const ListTasks = () => {
-	const table = tableStyles()
-    const location = useLocation();
-    const projectCode = location.state.projectCode;
-    const projectTitle = location.state.projectTitle;
+	const table = tableStyles();
+
+	let project = {};
+	if (localStorage && localStorage.getItem('project')) {
+	   project = JSON.parse(localStorage.getItem('project'));
+	}
+    const projectCode = project.projectCode;
+    const projectTitle = project.title;
 
 	const [isLoading, setIsLoading] = useState(true)
 	const [data, setData] = useState([])
 	const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")))
 	
-
 	const history = useHistory()
 	const handleRedirectToCreateTask = () => {
+		localStorage.setItem('project', JSON.stringify(project));
+
 		history.push({
 			pathname: "/task/create",
 			search: `?project=${projectTitle}`,
-			state: { projectCode: projectCode, projectTitle: projectTitle },
 		})
 	}
 
@@ -114,13 +118,14 @@ const ListTasks = () => {
 	}
 
 	const handleRedirectToEditTask = (rowData) =>{
-	console.log("🚀 ~ file: ListTasks.js ~ line 117 ~ handleRedirectToEditTask ~ rowData", rowData)
-	history.push({
-		pathname:"/task/edit",
-		search:`?task=${rowData.title}`,
-		state:{task:rowData, projectTitle: projectTitle}
-	})
-		
+		console.log("🚀 ~ file: ListTasks.js ~ line 117 ~ handleRedirectToEditTask ~ rowData", rowData);		
+		localStorage.setItem('project', JSON.stringify(project));
+		localStorage.setItem('task', JSON.stringify(rowData));
+
+		history.push({
+			pathname:"/task/edit",
+			search:`?task=${rowData.title}`,
+		});		
 	}
 
 	return (
