@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react"
-import { useLocation } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import {
 	makeStyles,
@@ -29,7 +28,7 @@ import { updateTask } from "../../../api/api"
 const useStyles = makeStyles(theme => ({
 	formControl: {
 		marginRight: theme.spacing(33),
-		marginBottom: theme.spacing(22),
+		marginBottom: theme.spacing(14),
 		width: 300,
 	},
 	textField: {

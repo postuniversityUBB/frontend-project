@@ -21,7 +21,7 @@ import {
 } from "@material-ui/icons"
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
-import { Redirect, useHistory, useLocation } from "react-router-dom"
+import { Redirect, useHistory } from "react-router-dom"
 
 import { getTasksForProject } from "../../../api/api"
 import { deleteTask } from "../../../api/api"

@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useLocation } from "react-router-dom";
-import { useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { makeStyles, FormControl, TextField, Grid, Button, RootRef, Backdrop, MenuItem } from '@material-ui/core';
 import { Dialog, DialogActions, DialogContent, DialogContentText, Slide } from '@material-ui/core';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
@@ -13,7 +12,7 @@ import { editProject } from "../../../api/api";
 const useStyles = makeStyles((theme) => ({
     formControl: {
         marginRight: theme.spacing(33),
-        marginBottom: theme.spacing(22),
+        marginBottom: theme.spacing(14),
         width: 300,
     },
     textField : {
