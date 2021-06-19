@@ -116,7 +116,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function CreateTaskPage() {
+const CreateTaskPage = () => {
     const domRef = useRef();
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();

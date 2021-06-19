@@ -114,7 +114,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function CreateProjectPage() {
+const CreateProjectPage = () => {
     const domRef = useRef();
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();

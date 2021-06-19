@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 
 import CarouselWithImages from '../../components/carousel/CarouselWithImages';
 
-export default function Index() {
+const Index = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")))
   if(!user){
     return <Redirect to="/login"/>
@@ -14,3 +14,5 @@ export default function Index() {
     </div>
   );
 }
+
+export default Index;

@@ -19,12 +19,12 @@ import {
 	Search,
 	ViewColumn,
 } from "@material-ui/icons"
-import AssignmentIcon from "@material-ui/icons/Assignment"
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
-import { Redirect, useHistory } from "react-router-dom"
+import { Redirect, useHistory, useLocation } from "react-router-dom"
 
-import { getProjects, deleteProject } from "../../../api/api"
+import { getTasksForProject } from "../../../api/api"
+import { deleteTask } from "../../../api/api"
 import LoadingSpinner from "../../components/layout/LoadingSpinner"
 
 const tableIcons = {
@@ -60,89 +60,95 @@ const tableStyles = makeStyles({
 	},
 })
 
-function ListProjects() {
+const handleDeleteTask = rowData => {
+	console.log("rowData", rowData)
+	const fetchData = async () => {
+		try {
+			await deleteTask(rowData.taskCode)
+			console.log("🚀 ~ file: ListTasks.js ~ line 65 ~ delete  task")
+			window.location.reload();
+		} catch (err) {
+			console.log(err)
+		}
+	}
+	fetchData()
+}
+
+const ListTasks = () => {
 	const table = tableStyles()
+    const location = useLocation();
+    const projectCode = location.state.projectCode;
+    const projectTitle = location.state.projectTitle;
 
 	const [isLoading, setIsLoading] = useState(true)
 	const [data, setData] = useState([])
 	const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")))
+	
+
 	const history = useHistory()
-
-	const handleRedirectTasks = rowData => {
+	const handleRedirectToCreateTask = () => {
 		history.push({
-			pathname: "/task/list",
-			search: `?project=${rowData.title}`,
-			state: { projectCode: rowData.projectCode, projectTitle: rowData.title },
+			pathname: "/task/create",
+			search: `?project=${projectTitle}`,
+			state: { projectCode: projectCode, projectTitle: projectTitle },
 		})
 	}
 
-	const handleRedirectToEditProject = rowData => {
-		history.push({
-			pathname: "/project/edit",
-			search: `?project=${rowData.title}`,
-			state: { project: rowData },
-		})
-	}
-	
-	const handleDeleteProject = rowData => {
-		const fetchData = async () => {
-			try {
-				await deleteProject(rowData.projectCode)
-				console.log("🚀 ~ file: ListProjects.js ~ line 69 ~ data")
-				window.location.reload();
-			} catch (err) {
-				console.log(err)
-			}
-		}
-		fetchData()
-	}
-	
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const data = await getProjects()
-				console.log("🚀 ~ file: ListProjects.js ~ line 69 ~ data", data)
-				setData(data)
+				const data = await getTasksForProject(projectCode);
+				console.log("🚀 ~ file: ListTasks.js ~ line 69 ~ data", data);
+				setData(data.tasks);
 
-				setIsLoading(false)
+				setIsLoading(false);
 			} catch (err) {
-				console.log(err)
+				console.log(err);
 			}
 		}
-		fetchData()
-	}, [])
+		fetchData();
+	}, []);
 
 	if (!user) {
 		return <Redirect to="/" />
 	}
 
+	const handleRedirectToEditTask = (rowData) =>{
+	console.log("🚀 ~ file: ListTasks.js ~ line 117 ~ handleRedirectToEditTask ~ rowData", rowData)
+	history.push({
+		pathname:"/task/edit",
+		search:`?task=${rowData.title}`,
+		state:{task:rowData, projectTitle: projectTitle}
+	})
+		
+	}
+
 	return (
 		<div className="listEntities">
-			<h3 id="headerListOfProjects" className="header">
-				All Projects
+			<h3 id="headerListOfTasks" className="header">
+				All tasks of {projectTitle}
 			</h3>
-
 			{isLoading ? (
 				<LoadingSpinner />
-			) : (
+			) : (				
 				<>
 					<div className="newEntity">
 						<Grid container spacing={1}>
 							<Grid container item xs={12} justify="flex-end">
 								{user?.role === "[ROLE_ADMIN]" ? (
 									<Tooltip
-										title="Create new project"
+										title="Create new task"
 										arrow
 										TransitionComponent={Fade}
 										TransitionProps={{ timeout: 600 }}
 										placement="left"
-										aria-label="create new project"
+										aria-label="create new task"
 									>
 										<Fab
-											id="buttonToCreateProject"
+											id="buttonToCreateTask"
 											className="inactive-button"
-											aria-label="add new project"
-											href="/project/create"
+											aria-label="add new task"
+											onClick={handleRedirectToCreateTask}
 										>
 											<AddIcon />
 										</Fab>
@@ -157,7 +163,7 @@ function ListProjects() {
 						icons={tableIcons}
 						columns={[
 							{
-								title: "Project Name",
+								title: "Task Name",
 								field: "title",
 								render: rowData => (
 									<div className={table.name}>{rowData.title}</div>
@@ -176,10 +182,19 @@ function ListProjects() {
 								searchable: true,
 								sortable: true,
 							},
+                            {
+								title: "Assigned To",
+								field: "assignedTo",
+								render: rowData => (
+									<div className={table.name}>{rowData.assignedTo}</div>
+								),
+								searchable: true,
+								sortable: true,
+							},
 							{
-								title: "Project Status",
-								field: "projectStatus",
-								render: rowData => rowData.projectStatus,
+								title: "Task Status",
+								field: "taskStatus",
+								render: rowData => rowData.taskStatus,
 								searchable: true,
 								sortable: true,
 							},
@@ -193,45 +208,43 @@ function ListProjects() {
 								sortable: true,
 							},
 							{
-								title: "Date Added",
-								field: "dateAdded",
-								render: rowData => formattedDate(rowData.dateAdded),
-								searchable: true,
-								sortable: true,
-							},
-							{
 								title: "Deadline",
 								field: "deadline",
 								render: rowData => formattedDate(rowData.deadline),
 								searchable: true,
 								sortable: true,
-								customFilterAndSearch: (searchValue, rowData) => handleSearchDeadline(searchValue, rowData)
+								customFilterAndSearch: (searchValue, rowData) => handleSearchDate(searchValue, rowData.deadline)
+							},
+							{
+								title: "Date Added",
+								field: "dateAdded",
+								render: rowData => formattedDate(rowData.dateAdded),
+								searchable: true,
+								sortable: true,
+								customFilterAndSearch: (searchValue, rowData) => handleSearchDate(searchValue, rowData.dateAdded)
+							},
+							{
+								title: "Last Modified",
+								field: "lastModified",
+								render: rowData => formattedDate(rowData.lastModified),
+								searchable: true,
+								sortable: true,
+								customFilterAndSearch: (searchValue, rowData) => handleSearchDate(searchValue, rowData.lastModified)
 							},
 						]}
 						data={data}
 						actions={ user?.role === "[ROLE_ADMIN]" ? [
 							{
-								icon: () => <AssignmentIcon />,
-								tooltip: "View tasks",
-								onClick: (event, rowData) => handleRedirectTasks(rowData),
-							},
-							{
 								icon: () => <DeleteIcon />,
-								tooltip: 'Delete Project',
-								onClick: (event, rowData) => handleDeleteProject(rowData)
+								tooltip: 'Delete Task',
+								onClick: (event, rowData) => handleDeleteTask(rowData)
 							},
 							{
 								icon: () => <EditIcon />,
-								tooltip: 'Edit Project',
-								onClick: (event, rowData) => {
-									handleRedirectToEditProject(rowData);
-								} 
+								tooltip: 'Edit Task',
+								onClick: (event, rowData) => handleRedirectToEditTask(rowData)
 							}
-						] : [{
-							icon: () => <AssignmentIcon />,
-							tooltip: "View tasks",
-							onClick: (event, rowData) => handleRedirectTasks(rowData),
-						}]}
+						] : [] }
 						options={{
 							search: true,
 							sorting: true,
@@ -260,13 +273,13 @@ function ListProjects() {
 						}}
 						localization={{
 							body: {
-								emptyDataSourceMessage: "No project found.",
+								emptyDataSourceMessage: "No task found.",
 							},
 							toolbar: {
 								searchPlaceholder: "Search",
 							},
 							pagination: {
-								labelRowsSelect: "projects per page",
+								labelRowsSelect: "tasks per page",
 								firstAriaLabel: "paginationFirstPage",
 								previousAriaLabel: "paginationPreviousPage",
 								nextAriaLabel: "paginationNextPage",
@@ -281,7 +294,6 @@ function ListProjects() {
 }
 
 function formattedDate(date) {
-	console.log("date", date)
 	if (date === null) {
 		return "N/A"
 	}
@@ -292,12 +304,12 @@ function formattedDate(date) {
 	)
 }
 
-function handleSearchDeadline(searchValue, rowData) {
-    var date = formattedDate(rowData.deadline);
+function handleSearchDate(searchValue, rowData) {
+    var date = formattedDate(rowData);
     if (date.indexOf(searchValue) !== -1) {
         return true;
     }
     return false;
 };
 
-export default ListProjects
+export default ListTasks

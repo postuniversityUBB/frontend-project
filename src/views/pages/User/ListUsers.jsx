@@ -48,7 +48,7 @@ const tableStyles = makeStyles({
 	},
 })
 
-function ListUsers() {
+const ListUsers = () => {
 	const table = tableStyles()
 
 	const [isLoading, setIsLoading] = useState(true)
@@ -130,6 +130,14 @@ function ListUsers() {
 								searchable: true,
 								sortable: true,
 							},
+							{
+								title: "Last Modified",
+								field: "lastModified",
+								render: rowData => formattedDate(rowData.lastModified),
+								searchable: true,
+								sortable: true,
+								customFilterAndSearch: (searchValue, rowData) => handleSearchDate(searchValue, rowData.lastModified)
+							},
 						]}
 						data={data}
 						options={{
@@ -179,5 +187,25 @@ function ListUsers() {
 		</div>
 	)
 }
+
+function formattedDate(date) {
+	if (date === null) {
+		return "N/A"
+	}
+
+	var sliceDate = date.slice(0, 10)
+	return (
+		sliceDate.slice(8, 10) + "/" + date.slice(5, 7) + "/" + date.slice(0, 4)
+	)
+}
+
+function handleSearchDate(searchValue, rowData) {
+    var date = formattedDate(rowData);
+    if (date.indexOf(searchValue) !== -1) {
+        return true;
+    }
+    return false;
+};
+
 
 export default ListUsers

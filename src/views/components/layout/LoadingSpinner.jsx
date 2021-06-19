@@ -1,7 +1,7 @@
 import React from 'react';
 import { CircularProgress, Grid} from '@material-ui/core';
 
-export default function LoadingSpinner() {
+const LoadingSpinner = () => {
   return (
     <Grid container spacing={1}>
         <Grid container item xs={12} justify="center">
@@ -10,3 +10,5 @@ export default function LoadingSpinner() {
     </Grid>
   );
 }
+
+export default LoadingSpinner;

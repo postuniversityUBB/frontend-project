@@ -19,12 +19,12 @@ import {
 	Search,
 	ViewColumn,
 } from "@material-ui/icons"
+import AssignmentIcon from "@material-ui/icons/Assignment"
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
-import { Redirect, useHistory, useLocation } from "react-router-dom"
+import { Redirect, useHistory } from "react-router-dom"
 
-import { getTasksForProject } from "../../../api/api"
-import { deleteTask } from "../../../api/api"
+import { getProjects, deleteProject } from "../../../api/api"
 import LoadingSpinner from "../../components/layout/LoadingSpinner"
 
 const tableIcons = {
@@ -60,95 +60,89 @@ const tableStyles = makeStyles({
 	},
 })
 
-const handleDeleteTask = rowData => {
-	console.log("rowData", rowData)
-	const fetchData = async () => {
-		try {
-			await deleteTask(rowData.taskCode)
-			console.log("🚀 ~ file: ListTasks.js ~ line 65 ~ delete  task")
-			window.location.reload();
-		} catch (err) {
-			console.log(err)
-		}
-	}
-	fetchData()
-}
-
-function ListTasks(props) {
+const ListProjects = () => {
 	const table = tableStyles()
-    const location = useLocation();
-    const projectCode = location.state.projectCode;
-    const projectTitle = location.state.projectTitle;
 
 	const [isLoading, setIsLoading] = useState(true)
 	const [data, setData] = useState([])
 	const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")))
-	
-
 	const history = useHistory()
-	const handleRedirectToCreateTask = () => {
+
+	const handleRedirectTasks = rowData => {
 		history.push({
-			pathname: "/task/create",
-			search: `?project=${projectTitle}`,
-			state: { projectCode: projectCode, projectTitle: projectTitle },
+			pathname: "/task/list",
+			search: `?project=${rowData.title}`,
+			state: { projectCode: rowData.projectCode, projectTitle: rowData.title },
 		})
 	}
 
+	const handleRedirectToEditProject = rowData => {
+		history.push({
+			pathname: "/project/edit",
+			search: `?project=${rowData.title}`,
+			state: { project: rowData },
+		})
+	}
+	
+	const handleDeleteProject = rowData => {
+		const fetchData = async () => {
+			try {
+				await deleteProject(rowData.projectCode)
+				console.log("🚀 ~ file: ListProjects.js ~ line 69 ~ data")
+				window.location.reload();
+			} catch (err) {
+				console.log(err)
+			}
+		}
+		fetchData()
+	}
+	
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const data = await getTasksForProject(projectCode);
-				console.log("🚀 ~ file: ListTasks.js ~ line 69 ~ data", data);
-				setData(data.tasks);
+				const data = await getProjects()
+				console.log("🚀 ~ file: ListProjects.js ~ line 69 ~ data", data)
+				setData(data)
 
-				setIsLoading(false);
+				setIsLoading(false)
 			} catch (err) {
-				console.log(err);
+				console.log(err)
 			}
 		}
-		fetchData();
-	}, []);
+		fetchData()
+	}, [])
 
 	if (!user) {
 		return <Redirect to="/" />
 	}
 
-	const handleRedirectToEditTask = (rowData) =>{
-	console.log("🚀 ~ file: ListTasks.js ~ line 117 ~ handleRedirectToEditTask ~ rowData", rowData)
-	history.push({
-		pathname:"/task/edit",
-		search:`?task=${rowData.title}`,
-		state:{task:rowData, projectTitle: projectTitle}
-	})
-		
-	}
-
 	return (
 		<div className="listEntities">
-			<h3 id="headerListOfTasks" className="header">
-				All tasks of {projectTitle}
+			<h3 id="headerListOfProjects" className="header">
+				All Projects
 			</h3>
+
 			{isLoading ? (
 				<LoadingSpinner />
-			) : (				
+			) : (
 				<>
 					<div className="newEntity">
 						<Grid container spacing={1}>
 							<Grid container item xs={12} justify="flex-end">
 								{user?.role === "[ROLE_ADMIN]" ? (
 									<Tooltip
-										title="Create new task"
+										title="Create new project"
 										arrow
 										TransitionComponent={Fade}
 										TransitionProps={{ timeout: 600 }}
 										placement="left"
-										aria-label="create new task"
+										aria-label="create new project"
 									>
 										<Fab
-											id="buttonToCreateTask"
+											id="buttonToCreateProject"
 											className="inactive-button"
-											aria-label="add new task"
-											onClick={handleRedirectToCreateTask}
+											aria-label="add new project"
+											href="/project/create"
 										>
 											<AddIcon />
 										</Fab>
@@ -163,7 +157,7 @@ function ListTasks(props) {
 						icons={tableIcons}
 						columns={[
 							{
-								title: "Task Name",
+								title: "Project Name",
 								field: "title",
 								render: rowData => (
 									<div className={table.name}>{rowData.title}</div>
@@ -182,19 +176,10 @@ function ListTasks(props) {
 								searchable: true,
 								sortable: true,
 							},
-                            {
-								title: "Assigned To",
-								field: "assignedTo",
-								render: rowData => (
-									<div className={table.name}>{rowData.assignedTo}</div>
-								),
-								searchable: true,
-								sortable: true,
-							},
 							{
-								title: "Task Status",
-								field: "taskStatus",
-								render: rowData => rowData.taskStatus,
+								title: "Project Status",
+								field: "projectStatus",
+								render: rowData => rowData.projectStatus,
 								searchable: true,
 								sortable: true,
 							},
@@ -208,6 +193,14 @@ function ListTasks(props) {
 								sortable: true,
 							},
 							{
+								title: "Deadline",
+								field: "deadline",
+								render: rowData => formattedDate(rowData.deadline),
+								searchable: true,
+								sortable: true,
+								customFilterAndSearch: (searchValue, rowData) => handleSearchDate(searchValue, rowData.deadline)
+							},
+							{
 								title: "Date Added",
 								field: "dateAdded",
 								render: rowData => formattedDate(rowData.dateAdded),
@@ -216,27 +209,38 @@ function ListTasks(props) {
 								customFilterAndSearch: (searchValue, rowData) => handleSearchDate(searchValue, rowData.dateAdded)
 							},
 							{
-								title: "Deadline",
-								field: "deadline",
-								render: rowData => formattedDate(rowData.deadline),
+								title: "Last Modified",
+								field: "lastModified",
+								render: rowData => formattedDate(rowData.lastModified),
 								searchable: true,
 								sortable: true,
-								customFilterAndSearch: (searchValue, rowData) => handleSearchDate(searchValue, rowData.deadline)
+								customFilterAndSearch: (searchValue, rowData) => handleSearchDate(searchValue, rowData.lastModified)
 							},
 						]}
 						data={data}
 						actions={ user?.role === "[ROLE_ADMIN]" ? [
 							{
+								icon: () => <AssignmentIcon />,
+								tooltip: "View tasks",
+								onClick: (event, rowData) => handleRedirectTasks(rowData),
+							},
+							{
 								icon: () => <DeleteIcon />,
-								tooltip: 'Delete Task',
-								onClick: (event, rowData) => handleDeleteTask(rowData)
+								tooltip: 'Delete Project',
+								onClick: (event, rowData) => handleDeleteProject(rowData)
 							},
 							{
 								icon: () => <EditIcon />,
-								tooltip: 'Edit Task',
-								onClick: (event, rowData) => handleRedirectToEditTask(rowData)
+								tooltip: 'Edit Project',
+								onClick: (event, rowData) => {
+									handleRedirectToEditProject(rowData);
+								} 
 							}
-						] : [] }
+						] : [{
+							icon: () => <AssignmentIcon />,
+							tooltip: "View tasks",
+							onClick: (event, rowData) => handleRedirectTasks(rowData),
+						}]}
 						options={{
 							search: true,
 							sorting: true,
@@ -265,13 +269,13 @@ function ListTasks(props) {
 						}}
 						localization={{
 							body: {
-								emptyDataSourceMessage: "No task found.",
+								emptyDataSourceMessage: "No project found.",
 							},
 							toolbar: {
 								searchPlaceholder: "Search",
 							},
 							pagination: {
-								labelRowsSelect: "tasks per page",
+								labelRowsSelect: "projects per page",
 								firstAriaLabel: "paginationFirstPage",
 								previousAriaLabel: "paginationPreviousPage",
 								nextAriaLabel: "paginationNextPage",
@@ -304,4 +308,4 @@ function handleSearchDate(searchValue, rowData) {
     return false;
 };
 
-export default ListTasks
+export default ListProjects

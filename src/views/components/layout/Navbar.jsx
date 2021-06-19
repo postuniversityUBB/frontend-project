@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }))
 
-export default function Navbar() {
+const Navbar = () => {
 	const classes = useStyles()
 	const [state, setState] = useState({
 		left: false,
@@ -223,3 +223,5 @@ export default function Navbar() {
 		</div>
 	)
 }
+
+export default Navbar;
