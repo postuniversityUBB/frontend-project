@@ -249,6 +249,7 @@ const EditProjectPage = () => {
                         className={classes.textField}                    
                         placeholder="Project Status"
                         InputLabelProps={{shrink: true,}}
+                        inputProps={{ "data-testid": "projectStatus" }}
                     >
                         {projectStatuses.map((status, index) => (
                             <MenuItem key={index} value={status.value}>

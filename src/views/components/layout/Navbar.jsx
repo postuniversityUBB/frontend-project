@@ -151,16 +151,14 @@ const Navbar = () => {
 									</Typography>
 									<Button component={Link} to={'/contact'}
 										size="large"
-										color="primary"
-				
+										color="primary"				
 										className={classes.menuButtons}
 									>
 										Contact
 									</Button>
 									<Button component={Link} to={'/about'}
 										size="large"
-										color="primary"
-										
+										color="primary"										
 										className={classes.menuButtons}
 									>
 										About

@@ -295,6 +295,7 @@ const EditTaskPage = () => {
 							className={classes.textField}
 							placeholder="Task Status"
 							InputLabelProps={{ shrink: true }}
+							inputProps={{ "data-testid": "taskStatus" }}
 						>
 							{taskStatuses.map((status, index) => (
 								<MenuItem key={index} value={status.value}>
