@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SelectUsers = ({handleChangeAssignedToUserCode, register}) => {
+const SelectUsers = ({register}) => {
     const classes = useStyles();
 
     const [users, setUsers] = useState([])

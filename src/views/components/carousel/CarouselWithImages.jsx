@@ -51,7 +51,6 @@ const Banner = (props) => {
                         {item.Name}
                     </Typography>
                 </CardMedia>
-
             </Grid>
         )
 

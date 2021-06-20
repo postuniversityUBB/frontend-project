@@ -9,8 +9,8 @@ import Charts from '../pages/Statistics/Charts';
 import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
 import Logout from "../pages/Logout/Logout"
-import AboutPage from '../pages/AboutPage/AboutPage';
-import ContactPage from '../pages/ContactPage/ContactPage';
+import AboutPage from '../pages/AboutPage/About';
+import ContactPage from '../pages/ContactPage/Contact';
 import EditTask from '../pages/Task/EditTask';
 
 
