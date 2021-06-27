@@ -1,4 +1,7 @@
-import React, { useState, useRef } from "react"
+import React, {useRef} from 'react'
+import { useLocation  } from 'react-router-dom'
+import queryString from 'query-string'
+import useCurentUser from './useCurentUser'
 import { useForm } from "react-hook-form"
 import {
 	makeStyles,
@@ -22,8 +25,6 @@ import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers"
 import DateFnsUtils from "@date-io/date-fns"
 import "date-fns"
 import { SnackbarProvider, useSnackbar } from "notistack"
-import SelectUsers from "../../components/selectUsers/SelectUsers"
-import { updateTask } from "../../../api/api"
 
 const useStyles = makeStyles(theme => ({
 	formControl: {
@@ -129,159 +130,43 @@ const useStyles = makeStyles(theme => ({
 		},
 	},
 }))
-const taskStatuses = [
-	{
-		value: "DEV_ON_DESK",
-		label: "Dev on desk",
-	},
-	{
-		value: "DEV_IN_PROGRESS",
-		label: "Dev in progress",
-	},
-	{
-		value: "TESTING",
-		label: "Testing",
-	},
-	{
-		value: "CANCELLED",
-		label: "Cancelled",
-	},
-	{
-		value: "COMPLETED",
-		label: "Completed",
-	},
-]
-const handleFormat = taskStatus => {
-	const value = taskStatuses.filter(
-		obj => obj.label.toLowerCase() === taskStatus
-	)[0]?.value
-	return value
-}
-const EditTaskPage = () => {
-	let task = {};
-	let project = {};
-	if (localStorage && localStorage.getItem('task') && localStorage.getItem('project')) {
-		task = JSON.parse(localStorage.getItem('task'));
-		project = JSON.parse(localStorage.getItem('project'));
-	}
-	const projectTitle = project.title;
-    console.log("🚀 ~ file: EditTask.jsx ~ line 166 ~ EditTaskPage ~ projectTitle", projectTitle)
-   
-	
-	const [title, setTitle] = useState(task?.title)
-	const [taskStatus, setTaskStatus] = useState(handleFormat(task?.taskStatus))
-	const [description, setDescription] = useState(task?.description)
-	const [assignedToUserCode, setAssignedToUserCode] = useState(
-		task?.assignedToUserCode
-	)
-    console.log("🚀 ~ file: EditTask.jsx ~ line 175 ~ EditTaskPage ~ assignedToUserCode", assignedToUserCode)
+
+const EditUsers = () => {
+    const location = useLocation()
+    const {usercode} = queryString.parse(location.search)
+    const user = useCurentUser({usercode})
+    console.log("🚀 ~ file: EditUsers.jsx ~ line 10 ~ EditUsers ~ user", user)
+    const classes = useStyles()
+    const domRef = useRef()
+    
+
+    
 
 
-	const [deadline, setDeadline] = useState(task?.deadline)
-	const [openBackToList, isOpenBackToList] = useState(false)
-	const [openCreateTask, isOpenCreateTask] = useState(false)
-	const { register, handleSubmit } = useForm()
-	const domRef = useRef()
-	const classes = useStyles()
-	const { enqueueSnackbar } = useSnackbar()
-	const onSubmit = async (values, e) => {
-		e.preventDefault()
-		const payload = {
-			assignedToUserCode: values.assignedToUserCode ? values.assignedToUserCode : assignedToUserCode ,
-			taskStatus: taskStatus,
-			description: description,
-			title: title,
-			deadline: values.deadline ? formatDate(values.deadline) : deadline,
-		}
-		console.log(
-			"🚀 ~ file: EditTask.jsx ~ line 173 ~ onSubmit ~ payload ",
-			payload
-		)
-		try {
-			const status = await updateTask(payload, task.taskCode)
-			isOpenCreateTask(true)
-			handleClickOpenCreateTaskSnackbar("success")
-		} catch (err) {
-			console.log(err)
-		}
-	}
-	const SubmitButton = props => <button {...props} type="submit" />
-	const handleClickOpenCreateTaskSnackbar = variant => {
-		enqueueSnackbar("New task successfully created!", { variant })
-	}
-
-	const handlePopUpBackToList = () => {
-		isOpenBackToList(true)
-	}
-
-	const handleCloseBackToList = () => {
-		isOpenBackToList(false)
-	}
-
-	const handleCloseCreateTask = () => {
-		isOpenCreateTask(false)
-	}
-
-	const handleChangeTitle = event => {
-		setTitle(event.target.value)
-	}
-
-	const handleChangeDescription = event => {
-		setDescription(event.target.value)
-	}
-
-	const handleChangeTaskStatus = event => {
-		setTaskStatus(event.target.value)
-	}
-
-	const handleChangeAssignedToUserCode = event => {
-		console.log(
-			"🚀 ~ file: EditTask.jsx ~ line 213 ~ EditTaskPage ~ event",
-			event.target.value
-		)
-		console.log(
-			"🚀 ~ file: EditTask.jsx ~ line 213 ~ EditTaskPage ~ eventsadasdasdasdasdasdasd"
-		)
-
-		setAssignedToUserCode(event.target.value)
-	}
-
-	const handleDeadline = date => {
-		setDeadline(date)
-	}
-
-	const handleResetDatePickerDeadline = () => {
-		setDeadline(null)
-	}
-	const handleRedirectToListTask = () => {
-		isOpenCreateTask(false)
-		window.history.back()
-	}
 
 
-	return (
-		<div className="createEntity">
+    return (
+        <div className="createEntity">
 			<h3 id="headerCreateTask" className="header">
-				Edit {title}
+				Edit {user?.username}
 			</h3>
 			<RootRef rootRef={domRef}>
 				<form onSubmit={handleSubmit(onSubmit)} autocomplete="off" noValidate>
 					<FormControl id="titleForm" className={classes.formControl}>
 						<TextField
-							id="title"
+							id="first-name"
 							type="text"
-							name="title"
-							value={title}
-							{...register("title")}
-							onChange={handleChangeTitle}
+							name="first-name"
+							value={user?.firstName}
+							{...register("firstName")}
 							className={classes.textField}
-							label="Title"
-							placeholder="Title"
+							label="First Name"
+							placeholder="first name"
 							InputLabelProps={{ shrink: true }}
 						/>
 					</FormControl>
 
-					<FormControl id="taskStatusForm" className={classes.formControl}>
+					
 						<Select
 							id="taskStatus"
 							type="text"
@@ -481,34 +366,7 @@ const EditTaskPage = () => {
 				</form>
 			</RootRef>
 		</div>
-	)
-}
-function formatDate(dateString) {
-	if (dateString === "") {
-		return dateString
-	}
-
-	const dateArray = dateString.split("/")
-	const [day, month, year] = dateArray
-	const newDate = new Date(year, month - 1, day)
-
-	const moment = require("moment")
-	const newDateFormat = moment(newDate).format("YYYY-MM-DD")
-	return newDateFormat
+    )
 }
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-	return <Slide direction="up" ref={ref} {...props} />
-})
-
-const TransitionCreateTask = React.forwardRef(function Transition(props, ref) {
-	return <Slide direction="up" ref={ref} {...props} />
-})
-
-export default function EditTask() {
-	return (
-		<SnackbarProvider maxSnack={1}>
-			<EditTaskPage />
-		</SnackbarProvider>
-	)
-}
+export default EditUsers
