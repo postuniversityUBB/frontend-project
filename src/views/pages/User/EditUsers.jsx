@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useRef,useState} from 'react'
 import { useLocation  } from 'react-router-dom'
 import queryString from 'query-string'
 import useCurentUser from './useCurentUser'
@@ -133,18 +133,34 @@ const useStyles = makeStyles(theme => ({
 
 const EditUsers = () => {
     const location = useLocation()
-    const {usercode} = queryString.parse(location.search)
-    const user = useCurentUser({usercode})
-    console.log("🚀 ~ file: EditUsers.jsx ~ line 10 ~ EditUsers ~ user", user)
+	const {usercode} = queryString.parse(location.search)
+	const user = location.state?.currentUser
+    console.log("🚀 ~ file: EditUsers.jsx ~ line 138 ~ EditUsers ~ userdsfsdfdsf", user)
+	//const {user , firstName} = useCurentUser({usercode})
+	const [firstName, setFirstName] = useState(JSON.parse(localStorage.getItem("editUser")).firstName)
+    console.log("🚀 ~ file: EditUsers.jsx ~ line 10 ~ EditUsers ~ user")
     const classes = useStyles()
     const domRef = useRef()
-    
+    const { register, handleSubmit } = useForm()
 
-    
+    const onSubmit = async (values, e) => {
+		e.preventDefault()
+	
+	}
 
 
 
+	const SubmitButton = props => <button {...props} type="submit" />
+	
+	const handleRedirectToListusers = ()=>{
+		
+	}
+	const handleCloseBackToUser = ()=>{
 
+	}
+	const handleRedirectToListUser = ()=>{
+
+	}
     return (
         <div className="createEntity">
 			<h3 id="headerCreateTask" className="header">
@@ -157,7 +173,7 @@ const EditUsers = () => {
 							id="first-name"
 							type="text"
 							name="first-name"
-							value={user?.firstName}
+							value={firstName}
 							{...register("firstName")}
 							className={classes.textField}
 							label="First Name"
@@ -165,74 +181,23 @@ const EditUsers = () => {
 							InputLabelProps={{ shrink: true }}
 						/>
 					</FormControl>
+					<FormControl id="titleForm" className={classes.formControl}>
+						<TextField
+							id="last-name"
+							type="text"
+							name="last-name"
+							value={user?.lastName}
+							{...register("lastName")}
+							className={classes.textField}
+							label="Last Name"
+							placeholder="last name"
+							InputLabelProps={{ shrink: true }}
+						/>
+					</FormControl>
 
 					
-						<Select
-							id="taskStatus"
-							type="text"
-							name="taskStatus"
-							{...register("taskStatus")}
-							label="Task Status"
-							value={taskStatus}
-							onChange={handleChangeTaskStatus}
-							className={classes.textField}
-							placeholder="Task Status"
-							InputLabelProps={{ shrink: true }}
-							inputProps={{ "data-testid": "taskStatus" }}
-						>
-							{taskStatuses.map((status, index) => (
-								<MenuItem key={index} value={status.value}>
-									{status.label}
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
 
-					<FormControl id="descriptionForm" className={classes.formControl}>
-						<TextField
-							id="description"
-							type="text"
-							multiline
-							rowsMax={3}
-							name="description"
-							value={description}
-							{...register("description")}
-							onChange={handleChangeDescription}
-							className={classes.textField}
-							label="Description"
-							placeholder="Description"
-							InputLabelProps={{ shrink: true }}
-						/>
-					</FormControl>
-
-					<FormControl id="addedByUserCodeForm" className={classes.formControl}>
-						<SelectUsers
-							register={register}
-							name='User Assigned'
-							value={assignedToUserCode}
-						/>
-					</FormControl>
-
-					<FormControl className={classes.formControl}>
-						<MuiPickersUtilsProvider utils={DateFnsUtils}>
-							<DatePicker
-								id="deadline"
-								name="deadline"
-								value={deadline}
-								{...register("deadline")}
-								onChange={date => handleDeadline(date)}
-								className={classes.keyboardDatePicker}
-								format="dd/MM/yyyy"
-								KeyboardButtonProps={{
-									"aria-label": "deadline",
-								}}
-								label="Deadline"
-								placeholder="Deadline   dd/mm/yyyy"
-								InputLabelProps={{ shrink: true }}
-								autoOk={true}
-							/>
-						</MuiPickersUtilsProvider>
-					</FormControl>
+		
 
 					<Grid container spacing={1}>
 						<Grid container item xs={12} justify="center">
@@ -248,13 +213,13 @@ const EditUsers = () => {
 								Edit Task
 							</Button>
 							<Backdrop
-								open={openCreateTask}
-								onClose={handleCloseCreateTask}
+								//open={openCreateTask}
+								//onClose={handleCloseCreateTask}
 								elevation={18}
 							>
 								<Dialog
-									open={openCreateTask}
-									TransitionComponent={TransitionCreateTask}
+									//open={openCreateTask}
+									//TransitionComponent={TransitionCreateTask}
 									keepMounted
 									aria-describedby="New task created!"
 									disableBackdropClick
@@ -273,7 +238,7 @@ const EditUsers = () => {
 												<Button
 													id="alertDialogButtonBackToListForBackToList"
 													className={classes.dialogCreateTaskBackToList}
-													onClick={handleRedirectToListTask}
+													onClick={handleRedirectToListusers}
 													color="primary"
 												>
 													OK
@@ -292,27 +257,20 @@ const EditUsers = () => {
 								variant="contained"
 								color="primary"
 								size="large"
-								onClick={() => {
-									title !== "" ||
-									taskStatus !== "" ||
-									description !== "" ||
-									deadline !== null
-										? handlePopUpBackToList()
-										: handleRedirectToListTask()
-								}}
+							
 							>
 								Back to list
 							</Button>
 							<Backdrop
-								open={openBackToList}
-								onClose={handleCloseBackToList}
+								//open={openBackToList}
+								//onClose={handleCloseBackToList}
 								elevation={18}
 							>
 								<Dialog
-									open={openBackToList}
-									TransitionComponent={Transition}
+									//open={openBackToList}
+									//TransitionComponent={Transition}
 									keepMounted
-									onClose={handleCloseBackToList}
+									onClose={handleCloseBackToUser}
 									aria-labelledby="Confirmation"
 									aria-describedby="Do you want to save changes to this document before closing?"
 									disableBackdropClick
@@ -341,7 +299,7 @@ const EditUsers = () => {
 												<Button
 													id="alertDialogButtonCancelForCreatTask"
 													className={classes.dialogCancelButton}
-													onClick={handleCloseBackToList}
+													onClick={handleCloseBackToUser}
 													color="primary"
 												>
 													Cancel
@@ -351,7 +309,7 @@ const EditUsers = () => {
 												<Button
 													id="alertDialogButtonProceedForCreateTask"
 													className={classes.dialogProceedButton}
-													onClick={handleRedirectToListTask}
+													onClick={handleRedirectToListUser}
 													color="primary"
 												>
 													Proceed
