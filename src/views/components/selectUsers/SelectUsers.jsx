@@ -9,9 +9,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SelectUsers = ({register}) => {
+const SelectUsers = ({register, name="User",value}) => {
     const classes = useStyles();
-
     const [users, setUsers] = useState([])
     useEffect(() => {
         (async () => {
@@ -23,13 +22,13 @@ const SelectUsers = ({register}) => {
     return (
         <>
             <InputLabel id="assignedTo">
-                User
+                {name}
 			</InputLabel>
             <Select
                 labelId="assignedToUserCode"
                 id="assignedToUserCode"
                 label="Role"
-                onChange={e =>console.log(e)}
+                defaultValue={value}
                 {...register("assignedToUserCode")}
                 className={classes.dropdown}
                 inputProps={{ "data-testid": "assignedTo" }}

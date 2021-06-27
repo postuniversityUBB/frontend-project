@@ -174,6 +174,9 @@ const EditTaskPage = () => {
 	const [assignedToUserCode, setAssignedToUserCode] = useState(
 		task?.assignedToUserCode
 	)
+    console.log("🚀 ~ file: EditTask.jsx ~ line 175 ~ EditTaskPage ~ assignedToUserCode", assignedToUserCode)
+
+
 	const [deadline, setDeadline] = useState(task?.deadline)
 	const [openBackToList, isOpenBackToList] = useState(false)
 	const [openCreateTask, isOpenCreateTask] = useState(false)
@@ -184,7 +187,7 @@ const EditTaskPage = () => {
 	const onSubmit = async (values, e) => {
 		e.preventDefault()
 		const payload = {
-			assignedToUserCode: values.assignedToUserCode,
+			assignedToUserCode: values.assignedToUserCode ? values.assignedToUserCode : assignedToUserCode ,
 			taskStatus: taskStatus,
 			description: description,
 			title: title,
@@ -325,7 +328,8 @@ const EditTaskPage = () => {
 					<FormControl id="addedByUserCodeForm" className={classes.formControl}>
 						<SelectUsers
 							register={register}
-							handleChangeAssignedToUserCode={handleChangeAssignedToUserCode}
+							name='User Assigned'
+							value={assignedToUserCode}
 						/>
 					</FormControl>
 
