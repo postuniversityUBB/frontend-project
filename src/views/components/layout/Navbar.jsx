@@ -149,6 +149,13 @@ const Navbar = () => {
 									>
 										Hi, {user.firstName}!
 									</Typography>
+									<Button component={Link} to={'/home/index'}
+										size="large"
+										color="primary"				
+										className={classes.menuButtons}
+									>
+										Home
+									</Button>
 									<Button component={Link} to={'/contact'}
 										size="large"
 										color="primary"				
