@@ -25,6 +25,7 @@ import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers"
 import DateFnsUtils from "@date-io/date-fns"
 import "date-fns"
 import { SnackbarProvider, useSnackbar } from "notistack"
+import {updateUser} from "../../../api/api"
 
 const useStyles = makeStyles(theme => ({
 	formControl: {
@@ -133,18 +134,23 @@ const useStyles = makeStyles(theme => ({
 
 const EditUsers = () => {
     const location = useLocation()
-	const {usercode} = queryString.parse(location.search)
-	const user = location.state?.currentUser
-    console.log("🚀 ~ file: EditUsers.jsx ~ line 138 ~ EditUsers ~ userdsfsdfdsf", user)
-	//const {user , firstName} = useCurentUser({usercode})
-	const [firstName, setFirstName] = useState(JSON.parse(localStorage.getItem("editUser")).firstName)
+	const user = JSON.parse(localStorage.getItem('editUser'))
+	const [firstName, setFirstName] = useState(user.firstName)
+	const [lastName, setLastName] = useState(user.lastName)
+	const [email, setEmail] = useState(user.email)
     console.log("🚀 ~ file: EditUsers.jsx ~ line 10 ~ EditUsers ~ user")
     const classes = useStyles()
     const domRef = useRef()
     const { register, handleSubmit } = useForm()
 
     const onSubmit = async (values, e) => {
-		e.preventDefault()
+	 const payload = {
+		 ...user,
+		 firstName : values.firstName ? values.firstName : firstName,
+		 lastName : values.lastName ? values.lastName : lastName,
+		 email : values.email ? values.email : email,
+	 }
+	  await updateUser(payload,user.userCode)
 	
 	}
 
@@ -161,6 +167,9 @@ const EditUsers = () => {
 	const handleRedirectToListUser = ()=>{
 
 	}
+	const handeSetFirstname = (e) =>{
+		setFirstName(e.target.value)
+	}
     return (
         <div className="createEntity">
 			<h3 id="headerCreateTask" className="header">
@@ -170,12 +179,13 @@ const EditUsers = () => {
 				<form onSubmit={handleSubmit(onSubmit)} autocomplete="off" noValidate>
 					<FormControl id="titleForm" className={classes.formControl}>
 						<TextField
-							id="first-name"
+							id="firstName"
 							type="text"
-							name="first-name"
-							value={firstName}
+							name="firstName"
+							value={ firstName ? firstName : ""}
 							{...register("firstName")}
 							className={classes.textField}
+							onChange={handeSetFirstname}
 							label="First Name"
 							placeholder="first name"
 							InputLabelProps={{ shrink: true }}
@@ -186,19 +196,32 @@ const EditUsers = () => {
 							id="last-name"
 							type="text"
 							name="last-name"
-							value={user?.lastName}
+							value={ lastName ? lastName : ""}
 							{...register("lastName")}
+							onChange={e => setLastName(e.target.value)}
 							className={classes.textField}
 							label="Last Name"
 							placeholder="last name"
 							InputLabelProps={{ shrink: true }}
 						/>
 					</FormControl>
+					<FormControl id="titleForm" className={classes.formControl}>
+						<TextField
+							id="email"
+							type="email"
+							name="last-name"
+							value={email ?email : ""}
+							{...register("email")}
+							
+							onChange={e => setEmail(e.target.value)}
+							className={classes.textField}
+							label="email"
+							placeholder="email"
+							InputLabelProps={{ shrink: true }}
+						/>
+					</FormControl>
 
-					
-
-		
-
+				
 					<Grid container spacing={1}>
 						<Grid container item xs={12} justify="center">
 							<Button

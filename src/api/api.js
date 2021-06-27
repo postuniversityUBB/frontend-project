@@ -146,7 +146,7 @@ export const getUserByCode = async (userCode) => {
 
 
 
-export const editUser = async (payload, userCode) => {
+export const updateUser = async (payload, userCode) => {
 		try {
 			const { status } = await axios.put(`${API_URL}/users/update/${userCode}`,payload, {
 				headers: {

@@ -87,7 +87,6 @@ const ListUsers = () => {
 		history.push({
 			pathname:"/user/edit",
 			search:`?usercode=${rowData.userCode}`,
-		
 		});	
 	}
 
