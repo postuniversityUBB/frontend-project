@@ -46,6 +46,7 @@ const useStyles = makeStyles(theme => ({
 		width: 100,
 		height: 40,
 		fontWeight: "bold",
+		fontSize: 17
 	},
 	userTitle: {
 		marginRight: "80px",
