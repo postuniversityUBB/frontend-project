@@ -13,7 +13,7 @@ import {
 
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
-import { getUsers } from "../../../api/api"
+import { deleteUser, getUsers } from "../../../api/api"
 import LoadingSpinner from "../../components/layout/LoadingSpinner"
 import { Redirect, useHistory } from "react-router-dom"
 
@@ -75,9 +75,7 @@ const ListUsers = () => {
 		return <Redirect to="/" />
 	}
 
-	const handleDeleteUser = (rowData) => {
-
-	}
+	
 
 	const handleRedirectToEditUser = (rowData) => {
     console.log("🚀 ~ file: ListUsers.jsx ~ line 83 ~ handleRedirectToEditUser ~ rowdata", rowData)
@@ -88,6 +86,20 @@ const ListUsers = () => {
 			pathname:"/user/edit",
 			search:`?usercode=${rowData.userCode}`,
 		});	
+	}
+
+	const handleDeleteUser = rowData => {
+		console.log("rowData", rowData)
+		const fetchData = async () => {
+			try {
+				await deleteUser(rowData.userCode)
+				console.log("🚀 ~ file: ListTasks.js ~ line 65 ~ delete  task")
+				window.location.reload();
+			} catch (err) {
+				console.log(err)
+			}
+		}
+		fetchData()
 	}
 
 	return (

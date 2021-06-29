@@ -8,7 +8,11 @@ import {
 	makeStyles,
 	Tooltip,
 	Fade,
+	Button,
+	Box,
 } from "@material-ui/core"
+
+
 import AddIcon from "@material-ui/icons/Add"
 import {
 	ArrowDownward,
@@ -26,6 +30,8 @@ import { Redirect, useHistory } from "react-router-dom"
 import { getTasksForProject } from "../../../api/api"
 import { deleteTask } from "../../../api/api"
 import LoadingSpinner from "../../components/layout/LoadingSpinner"
+
+
 
 const tableIcons = {
 	FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -60,6 +66,17 @@ const tableStyles = makeStyles({
 	},
 })
 
+const useStyles = makeStyles({
+	box: {
+		display: "flex",
+		paddingTop: 8
+	},
+	centerBox: {
+		justifyContent: "flex-end",
+		alignItems: "flex-end"
+	}
+})
+
 const handleDeleteTask = rowData => {
 	console.log("rowData", rowData)
 	const fetchData = async () => {
@@ -76,18 +93,18 @@ const handleDeleteTask = rowData => {
 
 const ListTasks = () => {
 	const table = tableStyles();
-
+	const classes = useStyles()
 	let project = {};
 	if (localStorage && localStorage.getItem('project')) {
-	   project = JSON.parse(localStorage.getItem('project'));
+		project = JSON.parse(localStorage.getItem('project'));
 	}
-    const projectCode = project.projectCode;
-    const projectTitle = project.title;
+	const projectCode = project.projectCode;
+	const projectTitle = project.title;
 
 	const [isLoading, setIsLoading] = useState(true)
 	const [data, setData] = useState([])
 	const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")))
-	
+
 	const history = useHistory()
 	const handleRedirectToCreateTask = () => {
 		localStorage.setItem('project', JSON.stringify(project));
@@ -117,15 +134,20 @@ const ListTasks = () => {
 		return <Redirect to="/" />
 	}
 
-	const handleRedirectToEditTask = (rowData) =>{
-		console.log("🚀 ~ file: ListTasks.js ~ line 117 ~ handleRedirectToEditTask ~ rowData", rowData);		
+	const handleRedirectToEditTask = (rowData) => {
+		console.log("🚀 ~ file: ListTasks.js ~ line 117 ~ handleRedirectToEditTask ~ rowData", rowData);
 		localStorage.setItem('project', JSON.stringify(project));
 		localStorage.setItem('task', JSON.stringify(rowData));
 
 		history.push({
-			pathname:"/task/edit",
-			search:`?task=${rowData.title}`,
-		});		
+			pathname: "/task/edit",
+			search: `?task=${rowData.title}`,
+		});
+	}
+
+	const backToProjects = () => {
+		history.push("/project/list")
+
 	}
 
 	return (
@@ -135,7 +157,7 @@ const ListTasks = () => {
 			</h3>
 			{isLoading ? (
 				<LoadingSpinner />
-			) : (				
+			) : (
 				<>
 					<div className="newEntity">
 						<Grid container spacing={1}>
@@ -187,7 +209,7 @@ const ListTasks = () => {
 								searchable: true,
 								sortable: true,
 							},
-                            {
+							{
 								title: "Assigned To",
 								field: "assignedTo",
 								render: rowData => (
@@ -238,7 +260,7 @@ const ListTasks = () => {
 							},
 						]}
 						data={data}
-						actions={ user?.role === "[ROLE_ADMIN]" ? [
+						actions={user?.role === "[ROLE_ADMIN]" ? [
 							{
 								icon: () => <DeleteIcon />,
 								tooltip: 'Delete Task',
@@ -249,7 +271,7 @@ const ListTasks = () => {
 								tooltip: 'Edit Task',
 								onClick: (event, rowData) => handleRedirectToEditTask(rowData)
 							}
-						] : [] }
+						] : []}
 						options={{
 							search: true,
 							sorting: true,
@@ -292,6 +314,15 @@ const ListTasks = () => {
 							},
 						}}
 					/>
+					<Box className={`${classes.centerBox} ${classes.box}`}>
+						<Button
+							variant="contained"
+							color="primary"
+						onClick={backToProjects}
+						>
+							Back to projects
+						</Button>
+					</Box>
 				</>
 			)}
 		</div>
@@ -310,11 +341,11 @@ function formattedDate(date) {
 }
 
 function handleSearchDate(searchValue, rowData) {
-    var date = formattedDate(rowData);
-    if (date.indexOf(searchValue) !== -1) {
-        return true;
-    }
-    return false;
+	var date = formattedDate(rowData);
+	if (date.indexOf(searchValue) !== -1) {
+		return true;
+	}
+	return false;
 };
 
 export default ListTasks

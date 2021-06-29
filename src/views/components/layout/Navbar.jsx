@@ -14,7 +14,7 @@ import {
 import MenuIcon from "@material-ui/icons/Menu"
 import ClearIcon from "@material-ui/icons/Clear"
 
-import companyLogo from "../../../styles/images/jira_1.png"
+import companyLogo from "../../../styles/images/logo2.png"
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -151,19 +151,19 @@ const Navbar = () => {
 									</Typography>
 									<Button component={Link} to={'/contact'}
 										size="large"
-										color="primary"				
+										color="primary"
 										className={classes.menuButtons}
 									>
 										Contact
 									</Button>
 									<Button component={Link} to={'/about'}
 										size="large"
-										color="primary"										
+										color="primary"
 										className={classes.menuButtons}
 									>
 										About
 									</Button>
-									<Button 
+									<Button
 										size="large"
 										color="primary"
 										href="/log-out"
@@ -174,6 +174,26 @@ const Navbar = () => {
 								</>
 							) : (
 								<>
+									<Link
+										style={{ flexGrow: 1 }}
+										id="linkToHome"
+										to="/home/index"
+									>
+										<Tooltip
+											arrow
+											TransitionComponent={Fade}
+											TransitionProps={{ timeout: 600 }}
+											title="Home page"
+											placement="right"
+										>
+											<img
+												src={companyLogo}
+												alt="Company Logo"
+												className="companyLogo"
+											/>
+										</Tooltip>
+									</Link>
+
 									<Button component={Link} to={'/contact'}
 										size="large"
 										color="primary"

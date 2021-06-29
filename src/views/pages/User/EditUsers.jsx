@@ -1,5 +1,6 @@
-import React, {useRef,useState} from 'react'
-import { useLocation  } from 'react-router-dom'
+import React, { useRef, useState } from 'react'
+import { useHistory } from 'react-router'
+import { useLocation } from 'react-router-dom'
 import queryString from 'query-string'
 import useCurentUser from './useCurentUser'
 import { useForm } from "react-hook-form"
@@ -12,6 +13,7 @@ import {
 	RootRef,
 	Backdrop,
 	Select,
+	InputLabel,
 } from "@material-ui/core"
 import {
 	Dialog,
@@ -25,7 +27,7 @@ import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers"
 import DateFnsUtils from "@date-io/date-fns"
 import "date-fns"
 import { SnackbarProvider, useSnackbar } from "notistack"
-import {updateUser} from "../../../api/api"
+import { updateUser } from "../../../api/api"
 
 const useStyles = makeStyles(theme => ({
 	formControl: {
@@ -132,46 +134,67 @@ const useStyles = makeStyles(theme => ({
 	},
 }))
 
-const EditUsers = () => {
-    const location = useLocation()
+const EditUserPage = () => {
+	const location = useLocation()
 	const user = JSON.parse(localStorage.getItem('editUser'))
 	const [firstName, setFirstName] = useState(user.firstName)
 	const [lastName, setLastName] = useState(user.lastName)
 	const [email, setEmail] = useState(user.email)
-    console.log("🚀 ~ file: EditUsers.jsx ~ line 10 ~ EditUsers ~ user")
-    const classes = useStyles()
-    const domRef = useRef()
-    const { register, handleSubmit } = useForm()
+	const [role, setRole] = useState(user.roles[0].role)
+	const classes = useStyles()
+	const domRef = useRef()
+	const { register, handleSubmit } = useForm()
+	const history = useHistory()
+	const [openBackToList, isOpenBackToList] = useState(false)
+	const [openEditUser, isOpenEditUser] = useState(false)
+	const { enqueueSnackbar } = useSnackbar()
 
-    const onSubmit = async (values, e) => {
-	 const payload = {
-		 ...user,
-		 firstName : values.firstName ? values.firstName : firstName,
-		 lastName : values.lastName ? values.lastName : lastName,
-		 email : values.email ? values.email : email,
-	 }
-	  await updateUser(payload,user.userCode)
-	
+	const onSubmit = async (values, e) => {
+		const payload = {
+			...user,
+			firstName: values.firstName ? values.firstName : firstName,
+			lastName: values.lastName ? values.lastName : lastName,
+			email: values.email ? values.email : email,
+			roles: [role],
+		}
+		await updateUser(payload, user.userCode)
+		isOpenEditUser(true)
+		handleClickOpenEditUserSnackbar("success")
+
 	}
 
 
 
 	const SubmitButton = props => <button {...props} type="submit" />
+
+	const handleClickOpenEditUserSnackbar = variant => {
+		enqueueSnackbar("New user successfully created!", { variant })
+	}
+
+	const handlePopUpBackToList = () => {
+		isOpenBackToList(true)
+	}
+
+	const handleCloseBackToList = () => {
+		isOpenBackToList(false)
+	}
+
+	const handleCloseEditUser = () => {
+		isOpenEditUser(false)
+	}
 	
-	const handleRedirectToListusers = ()=>{
-		
-	}
-	const handleCloseBackToUser = ()=>{
+
+
+	const handleRedirectToListUser = () => {
+		isOpenEditUser(false)
+		history.push("/user/list")
 
 	}
-	const handleRedirectToListUser = ()=>{
-
-	}
-	const handeSetFirstname = (e) =>{
+	const handeSetFirstname = (e) => {
 		setFirstName(e.target.value)
 	}
-    return (
-        <div className="createEntity">
+	return (
+		<div className="createEntity">
 			<h3 id="headerCreateTask" className="header">
 				Edit {user?.username}
 			</h3>
@@ -182,7 +205,7 @@ const EditUsers = () => {
 							id="firstName"
 							type="text"
 							name="firstName"
-							value={ firstName ? firstName : ""}
+							value={firstName ? firstName : ""}
 							{...register("firstName")}
 							className={classes.textField}
 							onChange={handeSetFirstname}
@@ -196,7 +219,7 @@ const EditUsers = () => {
 							id="last-name"
 							type="text"
 							name="last-name"
-							value={ lastName ? lastName : ""}
+							value={lastName ? lastName : ""}
 							{...register("lastName")}
 							onChange={e => setLastName(e.target.value)}
 							className={classes.textField}
@@ -210,9 +233,9 @@ const EditUsers = () => {
 							id="email"
 							type="email"
 							name="last-name"
-							value={email ?email : ""}
+							value={email ? email : ""}
 							{...register("email")}
-							
+
 							onChange={e => setEmail(e.target.value)}
 							className={classes.textField}
 							label="email"
@@ -221,7 +244,21 @@ const EditUsers = () => {
 						/>
 					</FormControl>
 
-				
+					<FormControl id="titleForm" className={classes.formControl}>
+						<InputLabel id="demo-simple-select-outlined-label">
+							Role
+						</InputLabel>
+						<Select
+
+							defaultValue={role}
+							onChange={e => setRole(e.target.value)}
+						>
+							<MenuItem value="ROLE_USER">User</MenuItem>
+							<MenuItem value="ROLE_ADMIN">Admin</MenuItem>
+						</Select>
+					</FormControl>
+
+
 					<Grid container spacing={1}>
 						<Grid container item xs={12} justify="center">
 							<Button
@@ -233,16 +270,16 @@ const EditUsers = () => {
 								size="large"
 								href="#"
 							>
-								Edit Task
+								Edit User
 							</Button>
 							<Backdrop
-								//open={openCreateTask}
-								//onClose={handleCloseCreateTask}
+								open={openEditUser}
+								onClose={handleCloseEditUser}
 								elevation={18}
 							>
 								<Dialog
-									//open={openCreateTask}
-									//TransitionComponent={TransitionCreateTask}
+									open={openEditUser}
+									TransitionComponent={TransitionEditUser}
 									keepMounted
 									aria-describedby="New task created!"
 									disableBackdropClick
@@ -252,7 +289,7 @@ const EditUsers = () => {
 											id="alertDialogDescriptionNewTask"
 											className={classes.dialogCreateTaskText}
 										>
-											Task edited successfully!
+											User edited successfully!
 										</DialogContentText>
 									</DialogContent>
 									<DialogActions>
@@ -261,7 +298,7 @@ const EditUsers = () => {
 												<Button
 													id="alertDialogButtonBackToListForBackToList"
 													className={classes.dialogCreateTaskBackToList}
-													onClick={handleRedirectToListusers}
+													onClick={handleRedirectToListUser}
 													color="primary"
 												>
 													OK
@@ -280,20 +317,29 @@ const EditUsers = () => {
 								variant="contained"
 								color="primary"
 								size="large"
+								onClick={() => {
+									firstName !== "" ||
+									lastName !== "" ||
+									email !== "" ||
+									role !== null
+										? handlePopUpBackToList()
+										: handleRedirectToListUser()
+								}}
 							
+
 							>
 								Back to list
 							</Button>
 							<Backdrop
-								//open={openBackToList}
-								//onClose={handleCloseBackToList}
+								open={openBackToList}
+								onClose={handleCloseBackToList}
 								elevation={18}
 							>
 								<Dialog
-									//open={openBackToList}
-									//TransitionComponent={Transition}
+									open={openBackToList}
+									TransitionComponent={Transition}
 									keepMounted
-									onClose={handleCloseBackToUser}
+									onClose={handleCloseBackToList}
 									aria-labelledby="Confirmation"
 									aria-describedby="Do you want to save changes to this document before closing?"
 									disableBackdropClick
@@ -322,7 +368,7 @@ const EditUsers = () => {
 												<Button
 													id="alertDialogButtonCancelForCreatTask"
 													className={classes.dialogCancelButton}
-													onClick={handleCloseBackToUser}
+													onClick={handleCloseBackToList}
 													color="primary"
 												>
 													Cancel
@@ -347,7 +393,21 @@ const EditUsers = () => {
 				</form>
 			</RootRef>
 		</div>
-    )
+	)
 }
 
-export default EditUsers
+const Transition = React.forwardRef(function Transition(props, ref) {
+	return <Slide direction="up" ref={ref} {...props} />
+})
+
+const TransitionEditUser = React.forwardRef(function Transition(props, ref) {
+	return <Slide direction="up" ref={ref} {...props} />
+})
+
+export default function EditUsers() {
+	return (
+		<SnackbarProvider maxSnack={1}>
+			<EditUserPage />
+		</SnackbarProvider>
+	)
+}
