@@ -1,4 +1,8 @@
-import React, { useState, useRef } from "react"
+import React, { useRef, useState } from 'react'
+import { useHistory } from 'react-router'
+import { useLocation } from 'react-router-dom'
+import queryString from 'query-string'
+import useCurentUser from './useCurentUser'
 import { useForm } from "react-hook-form"
 import {
 	makeStyles,
@@ -9,6 +13,7 @@ import {
 	RootRef,
 	Backdrop,
 	Select,
+	InputLabel,
 } from "@material-ui/core"
 import {
 	Dialog,
@@ -22,8 +27,7 @@ import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers"
 import DateFnsUtils from "@date-io/date-fns"
 import "date-fns"
 import { SnackbarProvider, useSnackbar } from "notistack"
-import SelectUsers from "../../components/selectUsers/SelectUsers"
-import { updateTask } from "../../../api/api"
+import { updateUser } from "../../../api/api"
 
 const useStyles = makeStyles(theme => ({
 	formControl: {
@@ -129,85 +133,42 @@ const useStyles = makeStyles(theme => ({
 		},
 	},
 }))
-const taskStatuses = [
-	{
-		value: "DEV_ON_DESK",
-		label: "Dev on desk",
-	},
-	{
-		value: "DEV_IN_PROGRESS",
-		label: "Dev in progress",
-	},
-	{
-		value: "TESTING",
-		label: "Testing",
-	},
-	{
-		value: "CANCELLED",
-		label: "Cancelled",
-	},
-	{
-		value: "COMPLETED",
-		label: "Completed",
-	},
-]
-const handleFormat = taskStatus => {
-	const value = taskStatuses.filter(
-		obj => obj.label.toLowerCase() === taskStatus
-	)[0]?.value
-	return value
-}
-const EditTaskPage = () => {
-	let task = {};
-	let project = {};
-	if (localStorage && localStorage.getItem('task') && localStorage.getItem('project')) {
-		task = JSON.parse(localStorage.getItem('task'));
-		project = JSON.parse(localStorage.getItem('project'));
-	}
-	const projectTitle = project.title;
-    console.log("🚀 ~ file: EditTask.jsx ~ line 166 ~ EditTaskPage ~ projectTitle", projectTitle)
-   
-	
-	const [title, setTitle] = useState(task?.title)
-	const [taskStatus, setTaskStatus] = useState(handleFormat(task?.taskStatus))
-	const [description, setDescription] = useState(task?.description)
-	const [assignedToUserCode, setAssignedToUserCode] = useState(
-		task?.assignedToUserCode
-	)
-    console.log("🚀 ~ file: EditTask.jsx ~ line 175 ~ EditTaskPage ~ assignedToUserCode", assignedToUserCode)
 
-
-	const [deadline, setDeadline] = useState(task?.deadline)
-	const [openBackToList, isOpenBackToList] = useState(false)
-	const [openCreateTask, isOpenCreateTask] = useState(false)
-	const { register, handleSubmit } = useForm()
-	const domRef = useRef()
+const EditUserPage = () => {
+	const location = useLocation()
+	const user = JSON.parse(localStorage.getItem('editUser'))
+	const [firstName, setFirstName] = useState(user.firstName)
+	const [lastName, setLastName] = useState(user.lastName)
+	const [email, setEmail] = useState(user.email)
+	const [role, setRole] = useState(user.roles[0].role)
 	const classes = useStyles()
+	const domRef = useRef()
+	const { register, handleSubmit } = useForm()
+	const history = useHistory()
+	const [openBackToList, isOpenBackToList] = useState(false)
+	const [openEditUser, isOpenEditUser] = useState(false)
 	const { enqueueSnackbar } = useSnackbar()
+
 	const onSubmit = async (values, e) => {
-		e.preventDefault()
 		const payload = {
-			assignedToUserCode: values.assignedToUserCode ? values.assignedToUserCode : assignedToUserCode ,
-			taskStatus: taskStatus,
-			description: description,
-			title: title,
-			deadline: values.deadline ? formatDate(values.deadline) : deadline,
+			...user,
+			firstName: values.firstName ? values.firstName : firstName,
+			lastName: values.lastName ? values.lastName : lastName,
+			email: values.email ? values.email : email,
+			roles: [role],
 		}
-		console.log(
-			"🚀 ~ file: EditTask.jsx ~ line 173 ~ onSubmit ~ payload ",
-			payload
-		)
-		try {
-			const status = await updateTask(payload, task.taskCode)
-			isOpenCreateTask(true)
-			handleClickOpenCreateTaskSnackbar("success")
-		} catch (err) {
-			console.log(err)
-		}
+		await updateUser(payload, user.userCode)
+		isOpenEditUser(true)
+		handleClickOpenEditUserSnackbar("success")
+
 	}
+
+
+
 	const SubmitButton = props => <button {...props} type="submit" />
-	const handleClickOpenCreateTaskSnackbar = variant => {
-		enqueueSnackbar("New task successfully created!", { variant })
+
+	const handleClickOpenEditUserSnackbar = variant => {
+		enqueueSnackbar("New user successfully created!", { variant })
 	}
 
 	const handlePopUpBackToList = () => {
@@ -218,136 +179,85 @@ const EditTaskPage = () => {
 		isOpenBackToList(false)
 	}
 
-	const handleCloseCreateTask = () => {
-		isOpenCreateTask(false)
+	const handleCloseEditUser = () => {
+		isOpenEditUser(false)
 	}
+	
 
-	const handleChangeTitle = event => {
-		setTitle(event.target.value)
+
+	const handleRedirectToListUser = () => {
+		isOpenEditUser(false)
+		history.push("/user/list")
+
 	}
-
-	const handleChangeDescription = event => {
-		setDescription(event.target.value)
+	const handeSetFirstname = (e) => {
+		setFirstName(e.target.value)
 	}
-
-	const handleChangeTaskStatus = event => {
-		setTaskStatus(event.target.value)
-	}
-
-	const handleChangeAssignedToUserCode = event => {
-		console.log(
-			"🚀 ~ file: EditTask.jsx ~ line 213 ~ EditTaskPage ~ event",
-			event.target.value
-		)
-		console.log(
-			"🚀 ~ file: EditTask.jsx ~ line 213 ~ EditTaskPage ~ eventsadasdasdasdasdasdasd"
-		)
-
-		setAssignedToUserCode(event.target.value)
-	}
-
-	const handleDeadline = date => {
-		setDeadline(date)
-	}
-
-	const handleResetDatePickerDeadline = () => {
-		setDeadline(null)
-	}
-	const handleRedirectToListTask = () => {
-		isOpenCreateTask(false)
-		window.history.back()
-	}
-
-
 	return (
 		<div className="createEntity">
 			<h3 id="headerCreateTask" className="header">
-				Edit {title}
+				Edit {user?.username}
 			</h3>
 			<RootRef rootRef={domRef}>
 				<form onSubmit={handleSubmit(onSubmit)} autocomplete="off" noValidate>
 					<FormControl id="titleForm" className={classes.formControl}>
 						<TextField
-							id="title"
+							id="firstName"
 							type="text"
-							name="title"
-							value={title}
-							{...register("title")}
-							onChange={handleChangeTitle}
+							name="firstName"
+							value={firstName ? firstName : ""}
+							{...register("firstName")}
 							className={classes.textField}
-							label="Title"
-							placeholder="Title"
+							onChange={handeSetFirstname}
+							label="First Name"
+							placeholder="first name"
+							InputLabelProps={{ shrink: true }}
+						/>
+					</FormControl>
+					<FormControl id="titleForm" className={classes.formControl}>
+						<TextField
+							id="last-name"
+							type="text"
+							name="last-name"
+							value={lastName ? lastName : ""}
+							{...register("lastName")}
+							onChange={e => setLastName(e.target.value)}
+							className={classes.textField}
+							label="Last Name"
+							placeholder="last name"
+							InputLabelProps={{ shrink: true }}
+						/>
+					</FormControl>
+					<FormControl id="titleForm" className={classes.formControl}>
+						<TextField
+							id="email"
+							type="email"
+							name="last-name"
+							value={email ? email : ""}
+							{...register("email")}
+
+							onChange={e => setEmail(e.target.value)}
+							className={classes.textField}
+							label="email"
+							placeholder="email"
 							InputLabelProps={{ shrink: true }}
 						/>
 					</FormControl>
 
-					<FormControl id="taskStatusForm" className={classes.formControl}>
+					<FormControl id="titleForm" className={classes.formControl}>
+						<InputLabel id="demo-simple-select-outlined-label">
+							Role
+						</InputLabel>
 						<Select
-							id="taskStatus"
-							type="text"
-							name="taskStatus"
-							{...register("taskStatus")}
-							label="Task Status"
-							value={taskStatus}
-							onChange={handleChangeTaskStatus}
-							className={classes.textField}
-							placeholder="Task Status"
-							InputLabelProps={{ shrink: true }}
-							inputProps={{ "data-testid": "taskStatus" }}
+
+							defaultValue={role}
+							onChange={e => setRole(e.target.value)}
 						>
-							{taskStatuses.map((status, index) => (
-								<MenuItem key={index} value={status.value}>
-									{status.label}
-								</MenuItem>
-							))}
+							<MenuItem value="ROLE_USER">User</MenuItem>
+							<MenuItem value="ROLE_ADMIN">Admin</MenuItem>
 						</Select>
 					</FormControl>
 
-					<FormControl id="descriptionForm" className={classes.formControl}>
-						<TextField
-							id="description"
-							type="text"
-							multiline
-							rowsMax={3}
-							name="description"
-							value={description}
-							{...register("description")}
-							onChange={handleChangeDescription}
-							className={classes.textField}
-							label="Description"
-							placeholder="Description"
-							InputLabelProps={{ shrink: true }}
-						/>
-					</FormControl>
-
-					<FormControl id="addedByUserCodeForm" className={classes.formControl}>
-						<SelectUsers
-							register={register}
-							name='User Assigned'
-							value={assignedToUserCode}
-						/>
-					</FormControl>
-
-					<FormControl className={classes.formControl}>
-						<MuiPickersUtilsProvider utils={DateFnsUtils}>
-							<DatePicker
-								id="deadline"
-								name="deadline"
-								value={deadline}
-								{...register("deadline")}
-								onChange={date => handleDeadline(date)}
-								className={classes.keyboardDatePicker}
-								format="dd/MM/yyyy"
-								KeyboardButtonProps={{
-									"aria-label": "deadline",
-								}}
-								label="Deadline"
-								placeholder="Deadline   dd/mm/yyyy"
-								InputLabelProps={{ shrink: true }}
-								autoOk={true}
-							/>
-						</MuiPickersUtilsProvider>
-					</FormControl>
 
 					<Grid container spacing={1}>
 						<Grid container item xs={12} justify="center">
@@ -360,16 +270,16 @@ const EditTaskPage = () => {
 								size="large"
 								href="#"
 							>
-								Edit Task
+								Edit User
 							</Button>
 							<Backdrop
-								open={openCreateTask}
-								onClose={handleCloseCreateTask}
+								open={openEditUser}
+								onClose={handleCloseEditUser}
 								elevation={18}
 							>
 								<Dialog
-									open={openCreateTask}
-									TransitionComponent={TransitionCreateTask}
+									open={openEditUser}
+									TransitionComponent={TransitionEditUser}
 									keepMounted
 									aria-describedby="New task created!"
 									disableBackdropClick
@@ -379,7 +289,7 @@ const EditTaskPage = () => {
 											id="alertDialogDescriptionNewTask"
 											className={classes.dialogCreateTaskText}
 										>
-											Task edited successfully!
+											User edited successfully!
 										</DialogContentText>
 									</DialogContent>
 									<DialogActions>
@@ -388,7 +298,7 @@ const EditTaskPage = () => {
 												<Button
 													id="alertDialogButtonBackToListForBackToList"
 													className={classes.dialogCreateTaskBackToList}
-													onClick={handleRedirectToListTask}
+													onClick={handleRedirectToListUser}
 													color="primary"
 												>
 													OK
@@ -408,13 +318,15 @@ const EditTaskPage = () => {
 								color="primary"
 								size="large"
 								onClick={() => {
-									title !== "" ||
-									taskStatus !== "" ||
-									description !== "" ||
-									deadline !== null
+									firstName !== "" ||
+									lastName !== "" ||
+									email !== "" ||
+									role !== null
 										? handlePopUpBackToList()
-										: handleRedirectToListTask()
+										: handleRedirectToListUser()
 								}}
+							
+
 							>
 								Back to list
 							</Button>
@@ -466,7 +378,7 @@ const EditTaskPage = () => {
 												<Button
 													id="alertDialogButtonProceedForCreateTask"
 													className={classes.dialogProceedButton}
-													onClick={handleRedirectToListTask}
+													onClick={handleRedirectToListUser}
 													color="primary"
 												>
 													Proceed
@@ -483,32 +395,19 @@ const EditTaskPage = () => {
 		</div>
 	)
 }
-function formatDate(dateString) {
-	if (dateString === "") {
-		return dateString
-	}
-
-	const dateArray = dateString.split("/")
-	const [day, month, year] = dateArray
-	const newDate = new Date(year, month - 1, day)
-
-	const moment = require("moment")
-	const newDateFormat = moment(newDate).format("YYYY-MM-DD")
-	return newDateFormat
-}
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />
 })
 
-const TransitionCreateTask = React.forwardRef(function Transition(props, ref) {
+const TransitionEditUser = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />
 })
 
-export default function EditTask() {
+export default function EditUsers() {
 	return (
 		<SnackbarProvider maxSnack={1}>
-			<EditTaskPage />
+			<EditUserPage />
 		</SnackbarProvider>
 	)
 }

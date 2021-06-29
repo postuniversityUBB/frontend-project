@@ -11,9 +11,11 @@ import {
 	ViewColumn,
 } from "@material-ui/icons"
 
-import { getUsers } from "../../../api/api"
+import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
+import { deleteUser, getUsers } from "../../../api/api"
 import LoadingSpinner from "../../components/layout/LoadingSpinner"
-import { Redirect } from "react-router-dom"
+import { Redirect, useHistory } from "react-router-dom"
 
 const tableIcons = {
 	FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -50,7 +52,7 @@ const tableStyles = makeStyles({
 
 const ListUsers = () => {
 	const table = tableStyles()
-
+	const history = useHistory()
 	const [isLoading, setIsLoading] = useState(true)
 	const [data, setData] = useState([])
 	const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")))
@@ -71,6 +73,33 @@ const ListUsers = () => {
 	}, [])
 	if (!user) {
 		return <Redirect to="/" />
+	}
+
+	
+
+	const handleRedirectToEditUser = (rowData) => {
+    console.log("🚀 ~ file: ListUsers.jsx ~ line 83 ~ handleRedirectToEditUser ~ rowdata", rowData)
+	localStorage.setItem('editUser', JSON.stringify(rowData));
+		
+
+		history.push({
+			pathname:"/user/edit",
+			search:`?usercode=${rowData.userCode}`,
+		});	
+	}
+
+	const handleDeleteUser = rowData => {
+		console.log("rowData", rowData)
+		const fetchData = async () => {
+			try {
+				await deleteUser(rowData.userCode)
+				console.log("🚀 ~ file: ListTasks.js ~ line 65 ~ delete  task")
+				window.location.reload();
+			} catch (err) {
+				console.log(err)
+			}
+		}
+		fetchData()
 	}
 
 	return (
@@ -140,6 +169,18 @@ const ListUsers = () => {
 							},
 						]}
 						data={data}
+						actions={ user?.role === "[ROLE_ADMIN]" ? [
+							{
+								icon: () => <DeleteIcon />,
+								tooltip: 'Delete User',
+								onClick: (event, rowData) => handleDeleteUser(rowData)
+							},
+							{
+								icon: () => <EditIcon />,
+								tooltip: 'Edit User',
+								onClick: (event, rowData) => handleRedirectToEditUser(rowData)
+							}
+						] : [] }
 						options={{
 							search: true,
 							sorting: true,
